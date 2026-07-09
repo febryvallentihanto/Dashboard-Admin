@@ -702,17 +702,16 @@
         </div>
     </main>
 
-    <!-- Custom Notification Element (Untuk menghindari penggunaan alert() default browser) -->
-    <div id="customToast" class="position-fixed top-0 start-50 translate-middle-x p-3"
-        style="z-index: 1060; display: none; margin-top: 20px;">
-        <div class="toast show align-items-center text-white bg-success border-0 shadow-lg" role="alert"
+    <!-- Toast Notification -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060; margin-top: 20px;">
+        <div id="liveToast" class="toast align-items-center text-white bg-success border-0 shadow-lg" role="alert"
             aria-live="assertive" aria-atomic="true">
             <div class="d-flex">
-                <div class="toast-body fw-medium" id="toastMessage">
-                    Pesan berhasil diproses.
+                <div class="toast-body fw-medium small" id="toastMessage">
+                    Data berhasil disimpan!
                 </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto"
-                    onclick="document.getElementById('customToast').style.display='none'"></button>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
             </div>
         </div>
     </div>
@@ -730,28 +729,17 @@
             const btnBatal = document.getElementById('btnBatal');
             const sidebarToggle = document.getElementById('sidebarToggle');
             const sidebar = document.getElementById('sidebar');
-            const toastEl = document.getElementById('customToast');
-            const toastMessage = document.getElementById('toastMessage');
-
-            // Fungsi untuk menampilkan pesan notifikasi menggantikan alert()
+            // Fungsi untuk menampilkan notifikasi toast
             function showNotification(message, isError = false) {
+                const toastEl = document.getElementById('liveToast');
+                const toastMessage = document.getElementById('toastMessage');
+
                 toastMessage.innerText = message;
-                const toastInner = toastEl.querySelector('.toast');
+                const bgClass = isError ? 'bg-danger' : 'bg-success';
+                toastEl.className = `toast align-items-center text-white border-0 shadow-lg ${bgClass}`;
 
-                if (isError) {
-                    toastInner.classList.remove('bg-success');
-                    toastInner.classList.add('bg-danger');
-                } else {
-                    toastInner.classList.remove('bg-danger');
-                    toastInner.classList.add('bg-success');
-                }
-
-                toastEl.style.display = 'block';
-
-                // Otomatis hilangkan dalam 3.5 detik
-                setTimeout(() => {
-                    toastEl.style.display = 'none';
-                }, 3500);
+                const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                toast.show();
             }
 
             // 1. Logika Unggah Foto Profil
@@ -814,18 +802,17 @@
             }
         });
 
-            // Pencarian pengaturan
-            const searchInputPeng = document.getElementById('searchInput');
-            if (searchInputPeng) {
-                searchInputPeng.addEventListener('input', function (e) {
-                    const term = e.target.value.toLowerCase().trim();
-                    document.querySelectorAll('.custom-card').forEach(card => {
-                        const text = card.textContent.toLowerCase();
-                        card.style.display = !term || text.includes(term) ? '' : 'none';
-                    });
+        // Pencarian pengaturan
+        const searchInputPeng = document.getElementById('searchInput');
+        if (searchInputPeng) {
+            searchInputPeng.addEventListener('input', function (e) {
+                const term = e.target.value.toLowerCase().trim();
+                document.querySelectorAll('.custom-card').forEach(card => {
+                    const text = card.textContent.toLowerCase();
+                    card.style.display = !term || text.includes(term) ? '' : 'none';
                 });
-            }
-        });
+            });
+        }
     </script>
 </body>
 

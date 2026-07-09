@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Transaksi - Gandoz Mobil</title>
+
+    <!-- Pustaka Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Pustaka Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Tipografi utama: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Pengaturan Dasar & Tipografi --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f6fc;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        /* --- Komponen Bilah Sisi (Sidebar) --- */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #eef0f5;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .brand-logo-container {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a73e8;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link-custom i {
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link-custom:hover {
+            background-color: #f8f9fa;
+            color: #1a73e8;
+        }
+
+        /* Status Aktif untuk Navigasi Pembayaran */
+        .nav-link-custom.active {
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-left: 4px solid #1a73e8;
+            font-weight: 600;
+        }
+
+        .user-profile {
+            padding: 20px 24px;
+            border-top: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        /* --- Area Konten Utama --- */
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* --- Header (Bilah Pencarian) --- */
+        .top-header {
+            background-color: #ffffff;
+            padding: 16px 32px;
+            border-bottom: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #a8c1f8;
+            background-color: #ffffff;
+        }
+
+        /* --- Ruang Konten Dalam --- */
+        .content-padding {
+            padding: 32px;
+            max-width: 1200px;
+            /* Membatasi lebar konten agar proporsional */
+        }
+
+        /* Breadcrumb */
+        .breadcrumb-custom {
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .breadcrumb-custom .text-muted {
+            color: #6c757d;
+        }
+
+        .breadcrumb-custom .text-active {
+            color: #1a73e8;
+        }
+
+        /* Header Aksi (Judul & Tombol) */
+        .page-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0;
+            color: #111827;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-back {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
+        .btn-print {
+            background-color: #0047a5;
+            /* Warna biru gelap sesuai gambar */
+            border: none;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: #003680;
+        }
+
+        /* --- Kartu Detail Transaksi --- */
+        .detail-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        /* Top Section Card */
+        .card-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .tx-id-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .tx-id-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0047a5;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .status-badge-lunas {
+            display: inline-flex;
+            align-items: center;
+            background-color: #ecfdf5;
+            color: #059669;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            background-color: #059669;
+            border-radius: 50%;
+        }
+
+        .tx-date-info {
+            text-align: right;
+        }
+
+        .tx-date-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 2px;
+        }
+
+        .tx-date-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        /* Garis Pemisah */
+        .divider {
+            height: 1px;
+            background-color: #f3f4f6;
+            margin: 24px 0;
+            border: none;
+        }
+
+        /* Middle Section Card (Info Grid) */
+        .info-grid {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .info-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .info-text-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        /* Table Section */
+        .table-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .detail-table {
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: collapse;
+        }
+
+        .detail-table thead {
+            background-color: #f8fafc;
+        }
+
+        .detail-table th {
+            padding: 16px 24px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-table td {
+            padding: 16px 24px;
+            font-size: 0.95rem;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .detail-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .col-qty {
+            text-align: center;
+        }
+
+        .col-price {
+            text-align: right;
+        }
+
+        /* Bottom Section (Total) */
+        .total-section {
+            text-align: right;
+            padding-top: 16px;
+        }
+
+        .total-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .total-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0047a5;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .total-note {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        /* --- Responsivitas (Media Queries) --- */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .top-header {
+                padding: 16px 20px;
+            }
+
+            .content-padding {
+                padding: 20px;
+            }
+
+            .detail-card {
+                padding: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tx-id-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .tx-date-info {
+                text-align: left;
+                margin-top: 16px;
+            }
+
+            .detail-table th,
+            .detail-table td {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+
+            .total-amount {
+                font-size: 2rem;
+            }
+        }
+
+        /* --- Gaya Khusus Cetak (Print Styles) --- */
+        @media print {
+            body {
+                background-color: #ffffff !important;
+            }
+
+            /* Sembunyikan elemen yang tidak perlu dicetak */
+            .sidebar,
+            .top-header,
+            .breadcrumb-custom,
+            .page-header-actions {
+                display: none !important;
+            }
+
+            /* Sesuaikan margin agar penuh di kertas */
+            .main-content {
+                margin-left: 0 !important;
+                min-height: auto !important;
+            }
+
+            .content-padding {
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+
+            /* Hilangkan bayangan dan border pada kartu detail */
+            .detail-card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+
+            /* Memaksa browser mencetak warna latar (seperti lencana status) */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            /* Tambahkan kop/judul identitas hanya saat dicetak */
+            .detail-card::before {
+                content: 'GANDOZ MOBIL - INVOICE TRANSAKSI';
+                display: block;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #0047a5;
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                border-bottom: 2px dashed #e5e7eb;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="d-flex">
+        <!-- ================= BILAH SISI (SIDEBAR) ================= -->
+        <aside class="sidebar">
+            <div class="brand-logo-container">
+                <div class="brand-icon">
+                    <i class="bi bi-car-front-fill"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Gandoz Mobil</h1>
+                    <p>Admin Workshop</p>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link-custom">
+                        <i class="bi bi-grid-1x2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pesanan_servis.html" class="nav-link-custom">
+                        <i class="bi bi-tools"></i> Pesanan Servis
+                    </a>
+                </li>
+                <!-- Menu Pembayaran tetap aktif karena ini adalah sub-halaman dari Pembayaran -->
+                <li class="nav-item">
+                    <a href="pembayaran.html" class="nav-link-custom active">
+                        <i class="bi bi-wallet2"></i> Pembayaran
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="laporan.html" class="nav-link-custom">
+                        <i class="bi bi-file-earmark-text"></i> Laporan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pengaturan.html" class="nav-link-custom">
+                        <i class="bi bi-gear"></i> Pengaturan
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-profile">
+                <div class="user-info-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e9ecef&color=333"
+                        alt="Budi Santoso" class="user-avatar">
+                    <div class="user-details">
+                        <h6>Budi Santoso</h6>
+                        <p style="text-transform: capitalize; font-weight: normal;">Super Admin</p>
+                    </div>
+                </div>
+                <button type="button" class="btn text-secondary border-0 p-0"
+                    onclick="window.location.href='login.html'"><i class="bi bi-box-arrow-right"></i></button>
+            </div>
+        </aside>
+
+        <!-- ================= KONTEN UTAMA ================= -->
+        <main class="main-content flex-grow-1">
+
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+            <!-- Header Atas (Pencarian) -->
+            <header class="top-header">
+                <button id="sidebarToggle" class="btn btn-link d-lg-none me-3 text-dark p-0 border-0">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+                <div class="search-bar">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="search-input" placeholder="Cari kendaraan, pelanggan, atau invoice..." id="searchInput">
+                </div>
+            </header>
+
+            <!-- Area Data Detail Transaksi -->
+            <div class="content-padding">
+
+                <!-- Navigasi Breadcrumb -->
+                <div class="breadcrumb-custom">
+                    <span class="text-muted">Pembayaran &gt;</span> <span class="text-active">Detail Transaksi</span>
+                </div>
+
+                <!-- Judul & Tombol Aksi -->
+                <div class="page-header-actions">
+                    <h2 class="page-title">Detail Transaksi</h2>
+                    <div class="action-buttons">
+                        <button class="btn-print" onclick="window.print()">
+                            <i class="bi bi-printer"></i> Cetak Invoice
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kartu Utama Detail Transaksi -->
+                <div class="detail-card">
+
+                    <!-- ID Transaksi & Waktu -->
+                    <div class="card-header-top">
+                        <div class="tx-id-container">
+                            <h2 class="tx-id-text">#TX-90211</h2>
+                            <span class="status-badge-lunas">
+                                <span class="status-dot"></span> Lunas
+                            </span>
+                        </div>
+                        <div class="tx-date-info">
+                            <div class="tx-date-label">Waktu Transaksi</div>
+                            <div class="tx-date-value">24 Oct 2023, 14:20</div>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <!-- Grid Informasi Pelanggan, Kendaraan & Pembayaran -->
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-person-fill"></i>
+                            </div>
+                            <div class="info-text-group">
+                                <span class="info-label">Nama Pelanggan</span>
+                                <span class="info-value">Citra Halim</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-car-front-fill"></i>
+                            </div>
+                            <div class="info-text-group">
+                                <span class="info-label">Data Kendaraan</span>
+                                <span class="info-value">Mitsubishi Pajero (AB 3499 SS)</span>
+                            </div>
+                        </div>
+
+                        <div class="info-item">
+                            <div class="info-icon">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+                            <div class="info-text-group">
+                                <span class="info-label">Metode Pembayaran</span>
+                                <span class="info-value">Transfer BRI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabel Item Layanan -->
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table class="detail-table">
+                                <thead>
+                                    <tr>
+                                        <th>NAMA LAYANAN/PART</th>
+                                        <th class="col-price">HARGA SATUAN</th>
+                                        <th class="col-qty">JUMLAH</th>
+                                        <th class="col-price">SUBTOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-medium">Ganti Oli Transmisi</td>
+                                        <td class="col-price text-muted">Rp 550.000</td>
+                                        <td class="col-qty text-muted">1</td>
+                                        <td class="col-price fw-semibold">Rp 550.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-medium">Ganti Sheal Roda</td>
+                                        <td class="col-price text-muted">Rp 75.000</td>
+                                        <td class="col-qty text-muted">1</td>
+                                        <td class="col-price fw-semibold">Rp 75.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-medium">Jasa Servis Berkala</td>
+                                        <td class="col-price text-muted">Rp 600.000</td>
+                                        <td class="col-qty text-muted">1</td>
+                                        <td class="col-price fw-semibold">Rp 600.000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Ringkasan Total Tagihan -->
+                    <div class="total-section">
+                        <div class="total-label">Total Tagihan</div>
+                        <div class="total-amount">Rp 1.225.000</div>
+                        <div class="total-note">Sudah termasuk pajak PPN 11%</div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Pustaka Bootstrap JS (Untuk interaksi dasar) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Logika Antarmuka Pengguna Dasar -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Logika Navigasi Overlay untuk lingkungan Mobile
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle && overlay) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.add('show');
+                    overlay.classList.add('show');
+                });
+
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                });
+            }
+        });
+
+            // Pencarian dalam halaman detail
+            const searchInputDtl3 = document.getElementById('searchInput');
+            if (searchInputDtl3) {
+                searchInputDtl3.addEventListener('input', function (e) {
+                    const term = e.target.value.toLowerCase().trim();
+                    const detailCard = document.querySelector('.detail-card');
+                    if (detailCard) {
+                        detailCard.style.display = !term || detailCard.textContent.toLowerCase().includes(term) ? '' : 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

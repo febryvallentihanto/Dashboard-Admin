@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail Transaksi - Budi Wijaya</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f6fc;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #eef0f5;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .brand-logo-container {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a73e8;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link-custom i {
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link-custom:hover {
+            background-color: #f8f9fa;
+            color: #1a73e8;
+        }
+
+        .nav-link-custom.active {
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-left: 4px solid #1a73e8;
+            font-weight: 600;
+        }
+
+        .user-profile {
+            padding: 20px 24px;
+            border-top: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .top-header {
+            background-color: #ffffff;
+            padding: 16px 32px;
+            border-bottom: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #a8c1f8;
+            background-color: #ffffff;
+        }
+
+        .content-padding {
+            padding: 32px;
+            max-width: 1200px;
+        }
+
+        .breadcrumb-custom {
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+            font-weight: 500;
+        }
+
+        .breadcrumb-custom .text-muted {
+            color: #6c757d;
+        }
+
+        .breadcrumb-custom .text-active {
+            color: #1a73e8;
+        }
+
+        .page-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .page-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin: 0;
+            color: #111827;
+        }
+
+        .btn-print {
+            background-color: #0047a5;
+            border: none;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-print:hover {
+            background-color: #003680;
+        }
+
+        .detail-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 32px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+
+        .card-header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .tx-id-container {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .tx-id-text {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #0047a5;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        /* Status Badge Lunas */
+        .status-badge-lunas {
+            display: inline-flex;
+            align-items: center;
+            background-color: #e6f6eb;
+            color: #20c997;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            gap: 6px;
+        }
+
+        .status-dot-lunas {
+            width: 6px;
+            height: 6px;
+            background-color: #20c997;
+            border-radius: 50%;
+        }
+
+        .tx-date-info {
+            text-align: right;
+        }
+
+        .tx-date-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 2px;
+        }
+
+        .tx-date-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .divider {
+            height: 1px;
+            background-color: #f3f4f6;
+            margin: 24px 0;
+            border: none;
+        }
+
+        .info-grid {
+            display: flex;
+            gap: 24px;
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex: 1;
+            min-width: 250px;
+        }
+
+        .info-icon {
+            width: 48px;
+            height: 48px;
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .info-text-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .table-container {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 32px;
+        }
+
+        .detail-table {
+            width: 100%;
+            margin-bottom: 0;
+            border-collapse: collapse;
+        }
+
+        .detail-table thead {
+            background-color: #f8fafc;
+        }
+
+        .detail-table th {
+            padding: 16px 24px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .detail-table td {
+            padding: 16px 24px;
+            font-size: 0.95rem;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+            vertical-align: middle;
+        }
+
+        .col-qty {
+            text-align: center;
+        }
+
+        .col-price {
+            text-align: right;
+        }
+
+        .total-section {
+            text-align: right;
+            padding-top: 16px;
+        }
+
+        .total-label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-bottom: 4px;
+            font-weight: 500;
+        }
+
+        .total-amount {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0047a5;
+            margin-bottom: 8px;
+            letter-spacing: -1px;
+        }
+
+        .total-note {
+            font-size: 0.75rem;
+            color: #9ca3af;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .top-header {
+                padding: 16px 20px;
+            }
+
+            .content-padding {
+                padding: 20px;
+            }
+
+            .detail-card {
+                padding: 20px;
+            }
+        }
+
+        @media print {
+            body {
+                background-color: #ffffff !important;
+            }
+
+            .sidebar,
+            .top-header,
+            .breadcrumb-custom,
+            .page-header-actions {
+                display: none !important;
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+                min-height: auto !important;
+            }
+
+            .content-padding {
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+
+            .detail-card {
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+            }
+
+            * {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+
+            .detail-card::before {
+                content: 'GANDOZ MOBIL - INVOICE TRANSAKSI';
+                display: block;
+                font-size: 1.5rem;
+                font-weight: 700;
+                color: #0047a5;
+                margin-bottom: 24px;
+                padding-bottom: 16px;
+                border-bottom: 2px dashed #e5e7eb;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="d-flex">
+        <aside class="sidebar">
+            <div class="brand-logo-container">
+                <div class="brand-icon"><i class="bi bi-car-front-fill"></i></div>
+                <div class="brand-text">
+                    <h1>Gandoz Mobil</h1>
+                    <p>Admin Workshop</p>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="dashboard.html" class="nav-link-custom"><i class="bi bi-grid-1x2"></i>
+                        Dashboard</a></li>
+                <li class="nav-item"><a href="pesanan_servis.html" class="nav-link-custom"><i class="bi bi-tools"></i>
+                        Pesanan Servis</a></li>
+                <li class="nav-item"><a href="pembayaran.html" class="nav-link-custom active"><i
+                            class="bi bi-wallet2"></i> Pembayaran</a></li>
+                <li class="nav-item"><a href="laporan.html" class="nav-link-custom"><i
+                            class="bi bi-file-earmark-text"></i> Laporan</a></li>
+                <li class="nav-item"><a href="pengaturan.html" class="nav-link-custom"><i class="bi bi-gear"></i>
+                        Pengaturan</a></li>
+            </ul>
+            <div class="user-profile">
+                <div class="user-info-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e9ecef&color=333"
+                        alt="Budi Santoso" class="user-avatar">
+                    <div class="user-details">
+                        <h6>Budi Santoso</h6>
+                        <p style="text-transform: capitalize; font-weight: normal;">Super Admin</p>
+                    </div>
+                </div>
+                <button type="button" class="btn text-secondary border-0 p-0"
+                    onclick="window.location.href='login.html'"><i class="bi bi-box-arrow-right"></i></button>
+            </div>
+        </aside>
+
+        <main class="main-content flex-grow-1">
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+            <header class="top-header">
+                <button id="sidebarToggle" class="btn btn-link d-lg-none me-3 text-dark p-0 border-0"><i
+                        class="bi bi-list fs-3"></i></button>
+                <div class="search-bar"><i class="bi bi-search"></i><input type="text" class="search-input"
+                        placeholder="Cari kendaraan, pelanggan, atau invoice..." id="searchInput"></div>
+            </header>
+
+            <div class="content-padding">
+                <div class="breadcrumb-custom">
+                    <span class="text-muted">Pembayaran &gt;</span> <span class="text-active">Detail Transaksi</span>
+                </div>
+
+                <div class="page-header-actions">
+                    <h2 class="page-title">Detail Transaksi</h2>
+                    <div class="action-buttons">
+                        <button class="btn-print" onclick="window.print()"><i class="bi bi-printer"></i> Cetak
+                            Invoice</button>
+                    </div>
+                </div>
+
+                <div class="detail-card">
+                    <div class="card-header-top">
+                        <div class="tx-id-container">
+                            <h2 class="tx-id-text">#TX-90212</h2>
+                            <span class="status-badge-lunas"><span class="status-dot-lunas"></span> Lunas</span>
+                        </div>
+                        <div class="tx-date-info">
+                            <div class="tx-date-label">Waktu Transaksi</div>
+                            <div class="tx-date-value">24 Oct 2023, 15:05</div>
+                        </div>
+                    </div>
+
+                    <hr class="divider">
+
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-icon"><i class="bi bi-person-fill"></i></div>
+                            <div class="info-text-group">
+                                <span class="info-label">Nama Pelanggan</span>
+                                <span class="info-value">Budi Wijaya</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="bi bi-car-front-fill"></i></div>
+                            <div class="info-text-group">
+                                <span class="info-label">Data Kendaraan</span>
+                                <span class="info-value">Honda Civic (AB 5678 YZ)</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-icon"><i class="bi bi-cash-stack"></i></div>
+                            <div class="info-text-group">
+                                <span class="info-label">Metode Pembayaran</span>
+                                <span class="info-value">Transfer Mandiri</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-responsive">
+                            <table class="detail-table">
+                                <thead>
+                                    <tr>
+                                        <th>NAMA LAYANAN/PART</th>
+                                        <th class="col-price">HARGA SATUAN</th>
+                                        <th class="col-qty">JUMLAH</th>
+                                        <th class="col-price">SUBTOTAL</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="fw-medium">Jasa Overhaul Mesin</td>
+                                        <td class="col-price text-muted">Rp 2.500.000</td>
+                                        <td class="col-qty text-muted">1</td>
+                                        <td class="col-price fw-semibold">Rp 2.500.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-medium">Piston Set OEM</td>
+                                        <td class="col-price text-muted">Rp 1.500.000</td>
+                                        <td class="col-qty text-muted">1</td>
+                                        <td class="col-price fw-semibold">Rp 1.500.000</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="fw-medium">Packing Set Cylinder Head</td>
+                                        <td class="col-price text-muted">Rp 500.000</td>
+                                        <td class="col-qty text-muted">1</td>
+                                        <td class="col-price fw-semibold">Rp 500.000</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="total-section">
+                        <div class="total-label">Total Tagihan</div>
+                        <div class="total-amount">Rp 4.500.000</div>
+                        <div class="total-note">Sudah termasuk pajak PPN 11%</div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+            if (sidebarToggle && overlay) {
+                sidebarToggle.addEventListener('click', () => { sidebar.classList.add('show'); overlay.classList.add('show'); });
+                overlay.addEventListener('click', () => { sidebar.classList.remove('show'); overlay.classList.remove('show'); });
+            }
+
+            // Pencarian dalam halaman detail
+            const searchInputDtl2 = document.getElementById('searchInput');
+            if (searchInputDtl2) {
+                searchInputDtl2.addEventListener('input', function (e) {
+                    const term = e.target.value.toLowerCase().trim();
+                    const detailCard = document.querySelector('.detail-card');
+                    if (detailCard) {
+                        detailCard.style.display = !term || detailCard.textContent.toLowerCase().includes(term) ? '' : 'none';
+                    }
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

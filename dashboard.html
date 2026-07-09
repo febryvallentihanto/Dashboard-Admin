@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Gandoz Mobil</title>
+
+    <!-- Pustaka Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Google Fonts: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Pustaka Chart.js untuk visualisasi data -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Pengaturan Dasar & Tipografi */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f6fc;
+            /* Warna latar kebiruan pucat sesuai desain */
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        /* --- Komponen Bilah Sisi (Sidebar) --- */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #eef0f5;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+        }
+
+        .brand-logo-container {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a73e8;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link-custom i {
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link-custom:hover {
+            background-color: #f8f9fa;
+            color: #1a73e8;
+        }
+
+        /* Status Aktif untuk Navigasi */
+        .nav-link-custom.active {
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-left: 4px solid #1a73e8;
+            font-weight: 600;
+        }
+
+        .user-profile {
+            padding: 20px 24px;
+            border-top: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        /* --- Area Konten Utama --- */
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header (Bilah Pencarian) --- */
+        .top-header {
+            background-color: #ffffff;
+            padding: 16px 32px;
+            border-bottom: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #a8c1f8;
+            background-color: #ffffff;
+        }
+
+        /* --- Ruang Konten Dalam --- */
+        .content-padding {
+            padding: 32px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        /* --- Desain Kartu (Card) --- */
+        .custom-card {
+            background: #ffffff;
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            padding: 24px;
+            height: 100%;
+        }
+
+        .stat-icon-wrapper {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .stat-badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 20px;
+            height: fit-content;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #6c757d;
+            letter-spacing: 0.5px;
+            margin-top: 20px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .stat-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 0;
+        }
+
+        /* Varian Warna Kartu Statistik */
+        .icon-green {
+            background-color: #e6f6eb;
+            color: #20c997;
+        }
+
+        .badge-green {
+            background-color: #e6f6eb;
+            color: #20c997;
+        }
+
+        .icon-blue {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .badge-blue {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .icon-cyan {
+            background-color: #e0f7fa;
+            color: #00bcd4;
+        }
+
+        .badge-cyan-text {
+            color: #1a73e8;
+            background: transparent;
+            font-size: 0.85rem;
+        }
+
+        .icon-gray {
+            background-color: #f1f3f5;
+            color: #adb5bd;
+        }
+
+        /* --- Daftar Aktivitas --- */
+        .activity-item {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .activity-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .activity-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .activity-details h6 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .activity-details p {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-bottom: 4px;
+        }
+
+        .activity-time {
+            font-size: 0.75rem;
+            color: #adb5bd;
+        }
+
+        /* --- Kustomisasi Grafik Legenda --- */
+        .chart-legend-custom {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.85rem;
+        }
+
+        .legend-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        /* Elemen Overlay untuk Mobile */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsivitas (Media Queries) */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                /* Sembunyikan sidebar di layar kecil */
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                /* Tampilkan sidebar saat menu ditekan */
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .top-header {
+                padding: 16px 20px;
+            }
+
+            .content-padding {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="d-flex">
+        <!-- ================= BILAH SISI (SIDEBAR) ================= -->
+        <aside class="sidebar">
+            <div class="brand-logo-container">
+                <div class="brand-icon">
+                    <i class="bi bi-car-front-fill"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Gandoz Mobil</h1>
+                    <p>Admin Workshop</p>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link-custom active">
+                        <i class="bi bi-grid-1x2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pesanan_servis.html" class="nav-link-custom">
+                        <i class="bi bi-tools"></i> Pesanan Servis
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pembayaran.html" class="nav-link-custom">
+                        <i class="bi bi-wallet2"></i> Pembayaran
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="laporan.html" class="nav-link-custom">
+                        <i class="bi bi-file-earmark-text"></i> Laporan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pengaturan.html" class="nav-link-custom">
+                        <i class="bi bi-gear"></i> Pengaturan
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-profile">
+                <div class="user-info-wrapper">
+                    <!-- Menggunakan placeholder untuk foto profil karena gambar eksternal dihindari -->
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e9ecef&color=333"
+                        alt="Budi Santoso" class="user-avatar">
+                    <div class="user-details">
+                        <h6>Budi Santoso</h6>
+                        <p>Super Admin</p>
+                    </div>
+                </div>
+                <!-- Mengubah link href menuju halaman login.html untuk fungsi logout -->
+                <a href="login.html" class="text-secondary"><i class="bi bi-box-arrow-right"></i></a>
+            </div>
+        </aside>
+
+        <!-- ================= KONTEN UTAMA ================= -->
+        <main class="main-content flex-grow-1">
+
+            <!-- Elemen Overlay untuk menu mobile -->
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+            <!-- Header Atas (Pencarian) -->
+            <header class="top-header">
+                <!-- Tombol Toggle Sidebar (Hanya tampil di mobile) -->
+                <button id="sidebarToggle" class="btn btn-link d-lg-none me-3 text-dark p-0 border-0">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+                <div class="search-bar">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="search-input" placeholder="Cari kendaraan, pelanggan, atau invoice..." id="searchInput">
+                </div>
+            </header>
+
+            <!-- Area Data Dashboard -->
+            <div class="content-padding">
+                <h2 class="page-title">Dashboard Overview</h2>
+                <p class="page-subtitle">Pantau performa workshop Gandoz Mobil hari ini.</p>
+
+                <!-- Deretan Kartu Statistik (4 Kolom) -->
+                <div class="row g-4 mb-4">
+                    <!-- Kartu 1: Pendapatan -->
+                    <div class="col-md-6 col-xl-3">
+                        <div class="custom-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="stat-icon-wrapper icon-green">
+                                    <i class="bi bi-cash-stack"></i>
+                                </div>
+                                <span class="stat-badge badge-green">+12% &uarr;</span>
+                            </div>
+                            <p class="stat-label">Pendapatan</p>
+                            <h3 class="stat-value">Rp 2.500.000</h3>
+                        </div>
+                    </div>
+
+                    <!-- Kartu 2: Total Pesanan -->
+                    <div class="col-md-6 col-xl-3">
+                        <div class="custom-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="stat-icon-wrapper icon-blue">
+                                    <i class="bi bi-calendar2-check"></i>
+                                </div>
+                                <span class="stat-badge badge-green">+8% &uarr;</span>
+                            </div>
+                            <p class="stat-label">Total Pesanan</p>
+                            <h3 class="stat-value">10</h3>
+                        </div>
+                    </div>
+
+                    <!-- Kartu 3: Kendaraan Dikerjakan -->
+                    <div class="col-md-6 col-xl-3">
+                        <div class="custom-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="stat-icon-wrapper icon-cyan">
+                                    <i class="bi bi-person-workspace"></i>
+                                </div>
+                                <span class="stat-badge badge-cyan-text fw-bold">Aktif</span>
+                            </div>
+                            <p class="stat-label">Kendaraan Dikerjakan</p>
+                            <h3 class="stat-value">5</h3>
+                        </div>
+                    </div>
+
+                    <!-- Kartu 4: Servis Selesai -->
+                    <div class="col-md-6 col-xl-3">
+                        <div class="custom-card">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div class="stat-icon-wrapper icon-gray">
+                                    <i class="bi bi-check-circle"></i>
+                                </div>
+                                <span class="stat-badge badge-green text-success bg-transparent px-0">92% Target</span>
+                            </div>
+                            <p class="stat-label">Servis Selesai</p>
+                            <h3 class="stat-value">2</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Bagian Bawah: Grafik dan Aktivitas -->
+                <div class="row g-4">
+                    <!-- Kolom Kiri: Grafik Pendapatan -->
+                    <div class="col-lg-8">
+                        <div class="custom-card">
+                            <div
+                                class="d-flex justify-content-between align-items-start align-items-sm-center flex-column flex-sm-row gap-2 mb-4">
+                                <div>
+                                    <h5 class="fw-bold mb-1">Pendapatan</h5>
+                                    <p class="text-muted small mb-0">Trend pemasukan dari servis dan sparepart</p>
+                                </div>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="chart-legend-custom d-none d-md-flex">
+                                        <span><span class="legend-dot" style="background-color: #1a73e8;"></span>
+                                            Servis</span>
+                                        <span><span class="legend-dot" style="background-color: #008080;"></span>
+                                            Sparepart</span>
+                                    </div>
+                                    <!-- Menambahkan dropdown filter seperti yang diminta -->
+                                    <select id="filterPendapatan" class="form-select form-select-sm"
+                                        style="width: auto; min-width: 100px; cursor: pointer;"
+                                        aria-label="Filter Pendapatan">
+                                        <option value="harian">Harian</option>
+                                        <option value="bulanan" selected>Bulanan</option>
+                                        <option value="tahunan">Tahunan</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!-- Wadah Canvas untuk Chart.js dengan batasan tinggi statis -->
+                            <div style="position: relative; height: 260px; width: 100%;">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Kolom Kanan: Aktivitas Terbaru -->
+                    <div class="col-lg-4">
+                        <div class="custom-card">
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <h5 class="fw-bold mb-0">Aktivitas<br>Terbaru</h5>
+                                <!-- Mengubah link ke pesanan_servis.html -->
+                                <a href="pesanan_servis.html"
+                                    class="text-decoration-none text-primary small fw-semibold">Lihat<br>Semua</a>
+                            </div>
+
+                            <div class="activity-list">
+                                <!-- Item 1 -->
+                                <div class="activity-item">
+                                    <div class="activity-icon icon-green">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <h6>Toyota Avanza (B 1234 GZ)</h6>
+                                        <p>Selesai Ganti Oli & Filter</p>
+                                        <span class="activity-time">10 menit yang lalu</span>
+                                    </div>
+                                </div>
+
+                                <!-- Item 2 -->
+                                <div class="activity-item">
+                                    <div class="activity-icon icon-blue">
+                                        <i class="bi bi-arrow-repeat"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <h6>Honda Civic (D 888 CP)</h6>
+                                        <p>Menunggu Sparepart (Kampas Rem)</p>
+                                        <span class="activity-time">25 menit yang lalu</span>
+                                    </div>
+                                </div>
+
+                                <!-- Item 3 -->
+                                <div class="activity-item">
+                                    <div class="activity-icon bg-secondary-subtle text-secondary">
+                                        <i class="bi bi-person-fill"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <h6>Booking Baru: Mitsubishi Pajero</h6>
+                                        <p>Oleh: Pak Slamet - Besok 09:00</p>
+                                        <span class="activity-time">1 jam yang lalu</span>
+                                    </div>
+                                </div>
+
+                                <!-- Item 4 -->
+                                <div class="activity-item">
+                                    <div class="activity-icon bg-danger-subtle text-danger">
+                                        <i class="bi bi-exclamation-circle-fill"></i>
+                                    </div>
+                                    <div class="activity-details">
+                                        <h6>Pembayaran Tertunda</h6>
+                                        <p>Invoice #INV-00982 (Suzuki Ertiga)</p>
+                                        <span class="activity-time">3 jam yang lalu</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Skrip Inisialisasi Grafik (Chart.js) -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // --- Logika Navigasi Responsif (Sidebar Toggle) ---
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle && overlay) {
+                sidebarToggle.addEventListener('click', function () {
+                    sidebar.classList.add('show');
+                    overlay.classList.add('show');
+                });
+
+                overlay.addEventListener('click', function () {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                });
+            }
+
+            // --- Konfigurasi Chart.js ---
+            const ctx = document.getElementById('revenueChart').getContext('2d');
+
+            // Data dummy untuk masing-masing filter
+            const chartData = {
+                harian: {
+                    labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
+                    servis: [12, 19, 15, 25, 22, 30, 28],
+                    sparepart: [8, 15, 10, 20, 18, 25, 20]
+                },
+                bulanan: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
+                    servis: [20, 30, 25, 45, 75, 70, 65, 85],
+                    sparepart: [15, 20, 35, 30, 50, 45, 60, 55]
+                },
+                tahunan: {
+                    labels: ['2020', '2021', '2022', '2023', '2024'],
+                    servis: [150, 200, 250, 300, 450],
+                    sparepart: [100, 150, 180, 220, 350]
+                }
+            };
+
+            const revenueChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: chartData.bulanan.labels,
+                    datasets: [
+                        {
+                            label: 'Servis',
+                            data: chartData.bulanan.servis,
+                            borderColor: '#1a73e8', // Warna garis biru
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            pointBackgroundColor: '#1a73e8',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            tension: 0.4 // Membuat kurva menjadi halus (spline)
+                        },
+                        {
+                            label: 'Sparepart',
+                            data: chartData.bulanan.sparepart, // Data representatif untuk Sparepart
+                            borderColor: '#008080', // Warna garis teal sesuai legenda
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            pointBackgroundColor: '#008080',
+                            pointBorderColor: '#ffffff',
+                            pointBorderWidth: 2,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            tension: 0.4
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false, // Menonaktifkan seluruh animasi agar grafik bersifat statis (diam)
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Disembunyikan karena sudah dibuat elemen HTML kustom
+                        },
+                        tooltip: {
+                            backgroundColor: '#ffffff',
+                            titleColor: '#333333',
+                            bodyColor: '#6c757d',
+                            borderColor: '#eef0f5',
+                            borderWidth: 1,
+                            titleFont: { family: 'Inter', size: 13, weight: 'bold' },
+                            bodyFont: { family: 'Inter', size: 13 },
+                            padding: 12,
+                            boxPadding: 4,
+                            usePointStyle: true
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            border: { display: false },
+                            grid: {
+                                color: '#eef0f5', // Menampilkan garis horizontal tipis sebagai panduan visual
+                                drawTicks: false
+                            },
+                            ticks: {
+                                display: false // Menghilangkan angka pada sumbu Y untuk kebersihan UI
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false, // Menghilangkan garis vertikal
+                                drawBorder: false
+                            },
+                            ticks: {
+                                color: '#adb5bd',
+                                font: {
+                                    family: 'Inter',
+                                    size: 11
+                                },
+                                padding: 10
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Event listener untuk mengubah data grafik berdasarkan pilihan dropdown
+            const filterDropdown = document.getElementById('filterPendapatan');
+            if (filterDropdown) {
+                filterDropdown.addEventListener('change', function (e) {
+                    const selectedValue = e.target.value;
+                    const dataToUse = chartData[selectedValue];
+
+                    // Perbarui label sumbu X
+                    revenueChart.data.labels = dataToUse.labels;
+                    // Perbarui data dataset Servis
+                    revenueChart.data.datasets[0].data = dataToUse.servis;
+                    // Perbarui data dataset Sparepart
+                    revenueChart.data.datasets[1].data = dataToUse.sparepart;
+
+                    // Terapkan perubahan ke grafik
+                    revenueChart.update();
+                });
+            }
+
+            // Pencarian aktivitas terbaru
+            const searchInputDash = document.getElementById('searchInput');
+            if (searchInputDash) {
+                searchInputDash.addEventListener('input', function (e) {
+                    const term = e.target.value.toLowerCase().trim();
+                    document.querySelectorAll('.activity-item').forEach(item => {
+                        const text = item.textContent.toLowerCase();
+                        item.style.display = !term || text.includes(term) ? '' : 'none';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

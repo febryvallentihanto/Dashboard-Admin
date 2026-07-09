@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengaturan Akun - Gandoz Mobil</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Tipografi utama: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Gaya Khusus (Custom CSS) */
+        :root {
+            --primary-blue: #1a73e8;
+            /* Biru disesuaikan dengan gambar */
+            --sidebar-width: 260px;
+            --bg-body: #f4f7fe;
+            --text-muted: #6c757d;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            font-family: 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* --- Komponen Bilah Sisi (Sidebar) --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-color: #ffffff;
+            border-right: 1px solid #eef0f5;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .brand-logo-container {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a73e8;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link-custom i {
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link-custom:hover {
+            background-color: #f8f9fa;
+            color: #1a73e8;
+        }
+
+        .nav-link-custom.active {
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-left: 4px solid #1a73e8;
+            font-weight: 600;
+        }
+
+        .user-profile {
+            padding: 20px 24px;
+            border-top: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        /* Area Konten Utama */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Header / Pencarian */
+        .top-header {
+            background-color: #ffffff;
+            padding: 15px 30px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+        }
+
+        .search-bar input {
+            width: 100%;
+            padding: 10px 10px 10px 40px;
+            border: 1px solid #ced4da;
+            border-radius: 6px;
+            background-color: #f8f9fa;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #86b7fe;
+            box-shadow: 0 0 0 0.25rem rgba(26, 115, 232, 0.25);
+        }
+
+        /* Konten Halaman Pengaturan */
+        .content-body {
+            padding: 40px 30px;
+            flex-grow: 1;
+        }
+
+        .page-title h2 {
+            font-weight: 700;
+            color: #212529;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            margin-bottom: 30px;
+        }
+
+        /* Kartu (Cards) */
+        .custom-card {
+            background-color: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+            padding: 25px;
+        }
+
+        /* Profil Avatar Besar (Inisial) */
+        .avatar-initial-large {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #e9ecef;
+            color: #6c757d;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .avatar-preview-img {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin: 0 auto 15px auto;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-upload {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 500;
+            border: none;
+            width: 100%;
+        }
+
+        .btn-upload:hover {
+            background-color: #dde0e3;
+        }
+
+        /* Form Kustom */
+        .form-label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #333;
+        }
+
+        .form-control:focus {
+            box-shadow: none;
+            border-color: var(--primary-blue);
+        }
+
+        /* Responsivitas untuk layar kecil */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease-in-out;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .mobile-toggle {
+                display: block !important;
+                margin-right: 15px;
+                font-size: 1.5rem;
+                cursor: pointer;
+            }
+
+            .sidebar .brand-logo-container {
+                padding: 20px 24px;
+            }
+
+            .sidebar .user-profile {
+                padding: 16px 24px;
+            }
+
+            .top-header {
+                padding: 15px 20px;
+            }
+
+            .content-body {
+                padding: 30px 20px;
+            }
+        }
+
+        .mobile-toggle {
+            display: none;
+        }
+
+        /* Layar Tablet Kecil & Mobile Landscape */
+        @media (max-width: 768px) {
+            .content-body {
+                padding: 24px 20px;
+            }
+
+            .page-title h2 {
+                font-size: 1.3rem;
+            }
+
+            .page-title p {
+                font-size: 0.9rem;
+                margin-bottom: 24px;
+            }
+
+            .custom-card {
+                padding: 20px;
+            }
+
+            .avatar-initial-large {
+                width: 100px;
+                height: 100px;
+                font-size: 36px;
+            }
+
+            .avatar-preview-img {
+                width: 100px;
+                height: 100px;
+            }
+
+            .custom-card h5 {
+                font-size: 1.1rem;
+            }
+
+            .form-label {
+                font-size: 0.85rem;
+            }
+
+            .d-flex.justify-content-end.gap-2 {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .d-flex.justify-content-end.gap-2 .btn {
+                width: 100%;
+            }
+        }
+
+        /* Layar Smartphone (Mobile Portrait) */
+        @media (max-width: 576px) {
+            .top-header {
+                padding: 12px 16px;
+            }
+
+            .search-bar input {
+                font-size: 0.9rem;
+                padding: 8px 8px 8px 36px;
+            }
+
+            .content-body {
+                padding: 20px 16px;
+            }
+
+            .page-title h2 {
+                font-size: 1.2rem;
+            }
+
+            .page-title p {
+                font-size: 0.85rem;
+                margin-bottom: 20px;
+            }
+
+            .custom-card {
+                padding: 16px;
+                border-radius: 8px;
+            }
+
+            .avatar-initial-large {
+                width: 80px;
+                height: 80px;
+                font-size: 28px;
+            }
+
+            .avatar-preview-img {
+                width: 80px;
+                height: 80px;
+            }
+
+            .custom-card h5 {
+                font-size: 1rem;
+            }
+
+            .custom-card .text-muted.small {
+                font-size: 0.75rem;
+                margin-bottom: 12px !important;
+            }
+
+            .btn-upload {
+                font-size: 0.85rem;
+                padding: 8px !important;
+            }
+
+            .form-label {
+                font-size: 0.8rem;
+            }
+
+            .form-control {
+                font-size: 0.9rem;
+            }
+
+            .input-group-text {
+                font-size: 0.85rem;
+            }
+
+            .row.g-4 {
+                --bs-gutter-y: 1rem;
+                --bs-gutter-x: 1rem;
+            }
+
+            #customToast {
+                width: calc(100% - 32px);
+                margin-top: 12px !important;
+            }
+
+            #customToast .toast {
+                width: 100%;
+                max-width: 100%;
+            }
+        }
+
+        /* Layar Handphone Kecil (max 480px) */
+        @media (max-width: 480px) {
+            .content-body {
+                padding: 16px 12px;
+            }
+
+            .page-title h2 {
+                font-size: 1.1rem;
+            }
+
+            .page-title p {
+                font-size: 0.8rem;
+                margin-bottom: 16px;
+            }
+
+            .custom-card {
+                padding: 14px;
+            }
+
+            .avatar-initial-large {
+                width: 70px;
+                height: 70px;
+                font-size: 24px;
+            }
+
+            .avatar-preview-img {
+                width: 70px;
+                height: 70px;
+            }
+
+            .sidebar .brand-logo-container {
+                padding: 16px;
+                gap: 10px;
+            }
+
+            .sidebar .brand-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .sidebar .brand-text h1 {
+                font-size: 1rem;
+            }
+
+            .sidebar .brand-text p {
+                font-size: 0.7rem;
+            }
+
+            .sidebar .user-profile {
+                padding: 16px;
+            }
+
+            .sidebar .user-avatar {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Layar Sangat Kecil (max 380px) */
+        @media (max-width: 380px) {
+            .top-header {
+                padding: 10px;
+            }
+
+            .search-bar input {
+                font-size: 0.8rem;
+                padding: 7px 7px 7px 32px;
+            }
+
+            .search-bar i {
+                left: 10px;
+                font-size: 0.85rem;
+            }
+
+            .content-body {
+                padding: 12px 8px;
+            }
+
+            .custom-card {
+                padding: 12px;
+                border-radius: 6px;
+            }
+
+            .avatar-initial-large {
+                width: 60px;
+                height: 60px;
+                font-size: 20px;
+            }
+
+            .avatar-preview-img {
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar Kiri -->
+    <aside class="sidebar" id="sidebar">
+        <div class="brand-logo-container">
+            <div class="brand-icon">
+                <i class="bi bi-car-front-fill"></i>
+            </div>
+            <div class="brand-text">
+                <h1>Gandoz Mobil</h1>
+                <p>Admin Workshop</p>
+            </div>
+        </div>
+
+        <ul class="nav-menu">
+            <!-- Tautan telah diarahkan sesuai permintaan -->
+            <li class="nav-item">
+                <a href="dashboard.html" class="nav-link-custom">
+                    <i class="bi bi-grid-1x2"></i> Dashboard
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="pesanan_servis.html" class="nav-link-custom">
+                    <i class="bi bi-tools"></i> Pesanan Servis
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="pembayaran.html" class="nav-link-custom">
+                    <i class="bi bi-wallet2"></i> Pembayaran
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="laporan.html" class="nav-link-custom">
+                    <i class="bi bi-file-earmark-text"></i> Laporan
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="pengaturan.html" class="nav-link-custom active">
+                    <i class="bi bi-gear"></i> Pengaturan
+                </a>
+            </li>
+        </ul>
+
+        <div class="user-profile">
+            <div class="user-info-wrapper">
+                <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e9ecef&color=333" alt="Budi Santoso"
+                    class="user-avatar">
+                <div class="user-details">
+                    <h6>Budi Santoso</h6>
+                    <p>Super Admin</p>
+                </div>
+            </div>
+            <!-- Mengarahkan ke halaman login.html untuk logout -->
+            <button type="button" class="btn text-secondary border-0 p-0" title="Logout"
+                onclick="window.location.href='login.html'"><i class="bi bi-box-arrow-right"></i></button>
+        </div>
+    </aside>
+
+    <!-- Konten Utama -->
+    <main class="main-content">
+        <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+        <!-- Header -->
+        <header class="top-header">
+            <i class="bi bi-list mobile-toggle" id="sidebarToggle"></i>
+            <div class="search-bar">
+                <i class="bi bi-search"></i>
+                <input type="text" placeholder="Cari kendaraan, pelanggan, atau invoice..." id="searchInput">
+            </div>
+        </header>
+
+        <!-- Body Konten -->
+        <div class="content-body">
+            <div class="page-title">
+                <h2>Pengaturan Akun</h2>
+                <p>Kelola informasi profil, keamanan, dan preferensi notifikasi Anda.</p>
+            </div>
+
+            <div class="row g-4">
+                <!-- Kolom Kiri: Foto Profil -->
+                <div class="col-12 col-lg-4">
+                    <div class="custom-card text-center h-100">
+                        <!-- Inisial Avatar (Default) -->
+                        <div class="avatar-initial-large" id="avatarInitial">BS</div>
+
+                        <!-- Tempat Pratinjau Gambar -->
+                        <img src="" alt="Pratinjau Profil" class="avatar-preview-img" id="avatarPreview">
+
+                        <h5 class="mt-3 mb-1 fw-bold">Budi Santoso</h5>
+                        <p class="text-muted small mb-4">Tipe file: JPG, PNG. Maksimal 2MB.</p>
+
+                        <!-- Input File Tersembunyi -->
+                        <input type="file" id="fileUpload" accept="image/png, image/jpeg" style="display: none;">
+                        <button type="button" class="btn btn-upload py-2 rounded-3" id="btnUploadTrigger">
+                            Unggah Foto Baru
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Kolom Kanan: Formulir -->
+                <div class="col-12 col-lg-8">
+                    <div class="custom-card">
+                        <form id="profileForm">
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label">Nama Lengkap</label>
+                                    <input type="text" class="form-control" id="inputName" value="Budi Santoso"
+                                        required>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label">Email</label>
+                                    <input type="email" class="form-control" id="inputEmail"
+                                        value="budi.santoso@gandoz.com" required>
+                                </div>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">Nomor Telepon</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-light">+62</span>
+                                    <input type="tel" class="form-control" id="inputPhone" value="81234567890">
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label">Alamat Workshop</label>
+                                <textarea class="form-control" id="inputAddress"
+                                    rows="3">Jl. Raya Otomotif No. 123, Jakarta Selatan</textarea>
+                            </div>
+
+                            <div class="d-flex justify-content-end gap-2 border-top pt-4">
+                                <button type="button" class="btn btn-secondary px-4" id="btnBatal">Batal</button>
+                                <button type="submit" class="btn btn-primary px-4">Simpan Perubahan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Custom Notification Element (Untuk menghindari penggunaan alert() default browser) -->
+    <div id="customToast" class="position-fixed top-0 start-50 translate-middle-x p-3"
+        style="z-index: 1060; display: none; margin-top: 20px;">
+        <div class="toast show align-items-center text-white bg-success border-0 shadow-lg" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-medium" id="toastMessage">
+                    Pesan berhasil diproses.
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                    onclick="document.getElementById('customToast').style.display='none'"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS dan Script Interaktif -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Elemen DOM
+            const btnUploadTrigger = document.getElementById('btnUploadTrigger');
+            const fileUpload = document.getElementById('fileUpload');
+            const avatarInitial = document.getElementById('avatarInitial');
+            const avatarPreview = document.getElementById('avatarPreview');
+            const profileForm = document.getElementById('profileForm');
+            const btnBatal = document.getElementById('btnBatal');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const toastEl = document.getElementById('customToast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            // Fungsi untuk menampilkan pesan notifikasi menggantikan alert()
+            function showNotification(message, isError = false) {
+                toastMessage.innerText = message;
+                const toastInner = toastEl.querySelector('.toast');
+
+                if (isError) {
+                    toastInner.classList.remove('bg-success');
+                    toastInner.classList.add('bg-danger');
+                } else {
+                    toastInner.classList.remove('bg-danger');
+                    toastInner.classList.add('bg-success');
+                }
+
+                toastEl.style.display = 'block';
+
+                // Otomatis hilangkan dalam 3.5 detik
+                setTimeout(() => {
+                    toastEl.style.display = 'none';
+                }, 3500);
+            }
+
+            // 1. Logika Unggah Foto Profil
+            btnUploadTrigger.addEventListener('click', function () {
+                fileUpload.click();
+            });
+
+            fileUpload.addEventListener('change', function (event) {
+                const file = event.target.files[0];
+                if (file) {
+                    if (file.size > 2 * 1024 * 1024) {
+                        showNotification("Ukuran file terlalu besar. Maksimal 2MB.", true);
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        avatarPreview.src = e.target.result;
+                        avatarPreview.style.display = 'block';
+                        avatarInitial.style.display = 'none';
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+
+            // 2. Logika Simpan Perubahan
+            profileForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                const name = document.getElementById('inputName').value;
+                const email = document.getElementById('inputEmail').value;
+                showNotification(`Data akun berhasil disimpan!`);
+            });
+
+            // 3. Logika Batal
+            btnBatal.addEventListener('click', function () {
+                document.getElementById('inputName').value = "Budi Santoso";
+                document.getElementById('inputEmail').value = "budi.santoso@gandoz.com";
+                document.getElementById('inputPhone').value = "81234567890";
+                document.getElementById('inputAddress').value = "Jl. Raya Otomotif No. 123, Jakarta Selatan";
+
+                fileUpload.value = "";
+                avatarPreview.style.display = 'none';
+                avatarPreview.src = "";
+                avatarInitial.style.display = 'flex';
+            });
+
+            // 4. Logika Toggle Sidebar Mobile
+            const overlay = document.getElementById('sidebarOverlay');
+
+            sidebarToggle.addEventListener('click', function () {
+                sidebar.classList.add('show');
+                if (overlay) overlay.classList.add('show');
+            });
+
+            if (overlay) {
+                overlay.addEventListener('click', function () {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                });
+            }
+        });
+
+            // Pencarian pengaturan
+            const searchInputPeng = document.getElementById('searchInput');
+            if (searchInputPeng) {
+                searchInputPeng.addEventListener('input', function (e) {
+                    const term = e.target.value.toLowerCase().trim();
+                    document.querySelectorAll('.custom-card').forEach(card => {
+                        const text = card.textContent.toLowerCase();
+                        card.style.display = !term || text.includes(term) ? '' : 'none';
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

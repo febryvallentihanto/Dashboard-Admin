@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pesanan Servis - Gandoz Mobil</title>
+
+    <!-- Pustaka Bootstrap 5 untuk utilitas grid dan tata letak -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons untuk ikonografi antarmuka -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Tipografi utama: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Pengaturan Dasar & Tipografi --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f6fc;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        /* --- Komponen Bilah Sisi (Sidebar) --- */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #eef0f5;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .brand-logo-container {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a73e8;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link-custom i {
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link-custom:hover {
+            background-color: #f8f9fa;
+            color: #1a73e8;
+        }
+
+        /* Status Aktif untuk Navigasi Pesanan Servis */
+        .nav-link-custom.active {
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-left: 4px solid #1a73e8;
+            font-weight: 600;
+        }
+
+        .user-profile {
+            padding: 20px 24px;
+            border-top: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        /* --- Area Konten Utama --- */
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* --- Header (Bilah Pencarian) --- */
+        .top-header {
+            background-color: #ffffff;
+            padding: 16px 32px;
+            border-bottom: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            /* Menambahkan gap untuk tombol toggle dan input pencarian */
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #a8c1f8;
+            background-color: #ffffff;
+        }
+
+        /* --- Ruang Konten Dalam --- */
+        .content-padding {
+            padding: 32px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        /* --- Desain Kartu (Card) --- */
+        .custom-card {
+            background: #ffffff;
+            border: 1px solid #eef0f5;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        /* --- Komponen Filter --- */
+        .filter-container {
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            border-bottom: 1px solid #eef0f5;
+        }
+
+        /* --- Desain Tabel Khusus --- */
+        .table-custom {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .table-custom th {
+            font-weight: 700;
+            color: #6c757d;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eef0f5;
+            border-top: none;
+            background-color: #fcfdfd;
+            white-space: nowrap;
+            /* Mencegah header tabel terpotong */
+        }
+
+        .table-custom td {
+            vertical-align: middle;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eef0f5;
+            color: #333333;
+            white-space: nowrap;
+            /* Mencegah isi sel tabel berantakan di layar kecil */
+        }
+
+        .table-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-custom tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Tipografi dalam sel tabel */
+        .fw-semibold-custom {
+            font-weight: 600;
+        }
+
+        .text-muted-custom {
+            color: #8e95a0;
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Plat Nomor Badge */
+        .badge-plate {
+            background-color: #f1f3f5;
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            display: inline-block;
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        /* --- 4 Status Badge Utama --- */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .status-badge::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+
+        .status-menunggu {
+            background-color: #fff3cd;
+            color: #d39e00;
+        }
+
+        .status-menunggu::before {
+            background-color: #d39e00;
+        }
+
+        .status-pemeriksaan {
+            background-color: #e0e7ff;
+            color: #4f46e5;
+        }
+
+        .status-pemeriksaan::before {
+            background-color: #4f46e5;
+        }
+
+        .status-dikerjakan {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .status-dikerjakan::before {
+            background-color: #1a73e8;
+        }
+
+        .status-selesai {
+            background-color: #e6f6eb;
+            color: #20c997;
+        }
+
+        .status-selesai::before {
+            background-color: #20c997;
+        }
+
+        /* Tombol Aksi (Detail, Edit, Status) */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid;
+            background: transparent;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s;
+        }
+
+        .btn-action i {
+            font-size: 0.85rem;
+        }
+
+        .btn-detail {
+            color: #1a73e8;
+            border-color: #a8c1f8;
+        }
+
+        .btn-detail:hover {
+            background-color: #e8f0fe;
+        }
+
+        .btn-edit {
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        .btn-edit:hover {
+            background-color: #f8f9fa;
+        }
+
+        .btn-status {
+            color: #008080;
+            border-color: #99cccc;
+        }
+
+        .btn-status:hover {
+            background-color: #e6f2f2;
+        }
+
+        /* --- Footer Tabel & Pagination --- */
+        .table-footer {
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eef0f5;
+            background-color: #fcfdfd;
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pagination-info {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+            border: none;
+            background: transparent;
+            color: #333333;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .page-btn:hover:not(.active):not(:disabled) {
+            background-color: #f1f3f5;
+        }
+
+        .page-btn.active {
+            background-color: #1a73e8;
+            color: white;
+        }
+
+        .page-btn:disabled {
+            color: #adb5bd;
+            cursor: not-allowed;
+        }
+
+        /* --- Responsivitas Lanjutan (Media Queries) --- */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Layar Tablet & Desktop Kecil */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .top-header {
+                padding: 16px 20px;
+            }
+
+            .content-padding {
+                padding: 24px 20px;
+            }
+        }
+
+        /* Layar Tablet Kecil & Mobile Landscape */
+        @media (max-width: 768px) {
+            .filter-container {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px;
+            }
+
+            /* Menyesuaikan tombol dropdown agar memenuhi lebar container */
+            .filter-container .dropdown,
+            .filter-container .dropdown .btn {
+                width: 100%;
+            }
+
+            .filter-container .dropdown .btn {
+                justify-content: space-between;
+            }
+
+            /* Izinkan teks tabel membungkus agar tidak perlu scroll horisontal berlebihan */
+            .table-custom th,
+            .table-custom td {
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            .table-custom th {
+                padding: 16px;
+                font-size: 0.8rem;
+            }
+
+            .table-custom td {
+                padding: 16px;
+            }
+
+            .table-footer {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+                padding: 16px;
+            }
+
+            .pagination-controls {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        /* Layar Smartphone (Mobile Portrait) */
+        @media (max-width: 576px) {
+            .top-header {
+                padding: 12px 16px;
+            }
+
+            .search-input {
+                font-size: 0.9rem;
+            }
+
+            .content-padding {
+                padding: 20px 16px;
+            }
+
+            .page-title {
+                font-size: 1.35rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 16px;
+            }
+
+            .custom-card {
+                border-radius: 8px;
+                /* Sudut sedikit dikurangi untuk layar sempit */
+            }
+
+            /* Penyesuaian Modal Detail pada Mobile */
+            .modal-body table th {
+                width: 45% !important;
+                font-size: 0.85rem;
+            }
+
+            .modal-body table td {
+                font-size: 0.85rem;
+            }
+
+            /* Penyesuaian tombol aksi di dalam tabel agar tetap rapi meski digeser */
+            .btn-action {
+                padding: 6px 10px;
+            }
+
+            .btn-action span {
+                display: none;
+                /* Menyembunyikan teks opsional jika ada, hanya ikon */
+            }
+
+            .table-custom td {
+                white-space: normal;
+            }
+        }
+
+        /* Layar Handphone Kecil (max 480px) */
+        @media (max-width: 480px) {
+            .content-padding {
+                padding: 16px 12px;
+            }
+
+            .page-title {
+                font-size: 1.15rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 12px;
+            }
+
+            .table-custom th {
+                padding: 10px;
+                font-size: 0.7rem;
+            }
+
+            .table-custom td {
+                padding: 10px;
+                font-size: 0.8rem;
+            }
+
+            .status-badge {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+
+            .status-badge::before {
+                width: 5px;
+                height: 5px;
+                margin-right: 4px;
+            }
+
+            .badge-plate {
+                font-size: 0.65rem;
+                padding: 2px 5px;
+            }
+
+            .action-buttons {
+                gap: 4px;
+            }
+
+            .btn-action {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+
+            .btn-action i {
+                font-size: 0.75rem;
+            }
+
+            .filter-container {
+                padding: 10px 12px;
+            }
+
+            .filter-container .dropdown .btn {
+                font-size: 0.8rem !important;
+                padding: 6px 10px !important;
+            }
+
+            .table-footer {
+                padding: 10px 12px;
+            }
+
+            .pagination-info {
+                font-size: 0.75rem;
+            }
+
+            .page-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+
+            .modal-dialog {
+                margin: 8px;
+            }
+
+            .modal-header {
+                padding: 12px 16px;
+            }
+
+            .modal-header h5 {
+                font-size: 1rem;
+            }
+
+            .modal-body {
+                padding: 12px 16px;
+            }
+
+            .modal-body table th,
+            .modal-body table td {
+                font-size: 0.8rem;
+                padding: 5px 0;
+            }
+
+            .modal-footer {
+                padding: 12px 16px;
+            }
+
+            .toast-container {
+                padding: 8px !important;
+                margin-top: 10px !important;
+                width: calc(100% - 16px);
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .toast {
+                width: 100% !important;
+                max-width: 100% !important;
+            }
+
+            .brand-logo-container {
+                padding: 16px;
+                gap: 10px;
+            }
+
+            .brand-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .brand-text h1 {
+                font-size: 1rem;
+            }
+
+            .brand-text p {
+                font-size: 0.7rem;
+            }
+
+            .user-profile {
+                padding: 16px;
+            }
+
+            .user-avatar {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Layar Sangat Kecil (max 380px) */
+        @media (max-width: 380px) {
+            .top-header {
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .search-input {
+                font-size: 0.8rem;
+                padding: 8px 10px 8px 32px;
+            }
+
+            .search-bar i {
+                left: 10px;
+                font-size: 0.8rem;
+            }
+
+            .content-padding {
+                padding: 12px 8px;
+            }
+
+            .custom-card {
+                border-radius: 6px;
+            }
+
+            .table-custom th {
+                padding: 8px 6px;
+                font-size: 0.6rem;
+            }
+
+            .table-custom td {
+                padding: 8px 6px;
+                font-size: 0.7rem;
+            }
+
+            .status-badge {
+                padding: 3px 6px;
+                font-size: 0.6rem;
+            }
+
+            .btn-action {
+                padding: 3px 6px;
+                font-size: 0.6rem;
+            }
+
+            .page-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 0.65rem;
+            }
+
+            .modal-dialog {
+                margin: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="d-flex">
+        <!-- ================= BILAH SISI (SIDEBAR) ================= -->
+        <aside class="sidebar" id="sidebar">
+            <div class="brand-logo-container">
+                <div class="brand-icon">
+                    <i class="bi bi-car-front-fill"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Gandoz Mobil</h1>
+                    <p>Admin Workshop</p>
+                </div>
+            </div>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link-custom">
+                        <i class="bi bi-grid-1x2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pesanan_servis.html" class="nav-link-custom active">
+                        <i class="bi bi-tools"></i> Pesanan Servis
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pembayaran.html" class="nav-link-custom">
+                        <i class="bi bi-wallet2"></i> Pembayaran
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="laporan.html" class="nav-link-custom">
+                        <i class="bi bi-file-earmark-text"></i> Laporan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pengaturan.html" class="nav-link-custom">
+                        <i class="bi bi-gear"></i> Pengaturan
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-profile">
+                <div class="user-info-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e9ecef&color=333"
+                        alt="Budi Santoso" class="user-avatar">
+                    <div class="user-details">
+                        <h6>Budi Santoso</h6>
+                        <p>Super Admin</p>
+                    </div>
+                </div>
+                <a href="login.html" class="btn text-secondary border-0 p-0" title="Logout">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- ================= KONTEN UTAMA ================= -->
+        <main class="main-content flex-grow-1">
+
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+            <!-- Header Atas (Pencarian) -->
+            <header class="top-header">
+                <button id="sidebarToggle" class="btn btn-link d-lg-none text-dark p-0 border-0">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+                <div class="search-bar">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="search-input" placeholder="Cari kendaraan, pelanggan, atau plat nomor..."
+                        id="searchInput">
+                </div>
+            </header>
+
+            <!-- Area Data Pesanan Servis -->
+            <div class="content-padding">
+                <h2 class="page-title">Pesanan Servis</h2>
+                <p class="page-subtitle">Kelola dan pantau status pengerjaan kendaraan pelanggan Anda.</p>
+
+                <!-- Komponen Filter, Tabel Data, dan Ekspor Disatukan -->
+                <div class="custom-card">
+                    <!-- Area Filter -->
+                    <div class="filter-container">
+
+                        <!-- Dropdown Filter -->
+                        <div class="dropdown">
+                            <button class="btn bg-white border d-flex align-items-center gap-2 dropdown-toggle"
+                                type="button" id="statusFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false"
+                                style="border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: #333; padding: 8px 16px; border-color: #e9ecef !important;">
+                                <i class="bi bi-filter"></i> <span id="currentFilterText">Semua Status</span>
+                            </button>
+                            <ul class="dropdown-menu shadow-sm border-0 w-100" aria-labelledby="statusFilterDropdown">
+                                <li><a class="dropdown-item filter-option active" href="#" data-filter="all">Semua
+                                        Status</a></li>
+                                <li><a class="dropdown-item filter-option" href="#" data-filter="menunggu">Menunggu</a>
+                                </li>
+                                <li><a class="dropdown-item filter-option" href="#"
+                                        data-filter="pemeriksaan">Pemeriksaan</a></li>
+                                <li><a class="dropdown-item filter-option" href="#"
+                                        data-filter="dikerjakan">Dikerjakan</a></li>
+                                <li><a class="dropdown-item filter-option" href="#" data-filter="selesai">Selesai</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Area Tabel -->
+                    <!-- KELAS table-responsive MENJAMIN TABEL BISA DI-SCROLL KE KANAN-KIRI DI MOBILE -->
+                    <div class="table-responsive">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>Pelanggan</th>
+                                    <th>Kendaraan</th>
+                                    <th>Paket Servis</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody">
+                                <!-- Data dimuat secara dinamis oleh JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Footer Tabel & Pagination -->
+                    <div class="table-footer">
+                        <div class="pagination-info" id="paginationInfo">
+                            Menampilkan <span class="fw-bold text-dark">0</span> pesanan
+                        </div>
+                        <div class="pagination-controls" id="paginationControls">
+                            <!-- Dikontrol via JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= KUMPULAN KOMPONEN MODAL ================= -->
+
+    <!-- Modal Detail -->
+    <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-sm">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="modalDetailLabel">Detail Pesanan Servis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-borderless mb-0">
+                        <tbody>
+                            <tr>
+                                <th class="ps-0 text-muted w-50">Nama</th>
+                                <td class="fw-semibold" id="detailNama"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">No Whatsapp</th>
+                                <td class="fw-semibold" id="detailWhatsapp"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Email</th>
+                                <td class="fw-semibold" id="detailEmail"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Plat Nomor</th>
+                                <td class="fw-semibold" id="detailPlat"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Merk</th>
+                                <td class="fw-semibold" id="detailMerk"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Model</th>
+                                <td class="fw-semibold" id="detailModel"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Tahun</th>
+                                <td class="fw-semibold" id="detailTahun"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Tanggal Servis</th>
+                                <td class="fw-semibold" id="detailTanggalServis"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Tanggal Kedatangan</th>
+                                <td class="fw-semibold" id="detailTanggalKedatangan"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Jam Kedatangan</th>
+                                <td class="fw-semibold" id="detailJamKedatangan"></td>
+                            </tr>
+                            <tr>
+                                <th class="ps-0 text-muted">Keluhan</th>
+                                <td class="fw-semibold" id="detailKeluhan"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Tutup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Edit -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-sm">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold" id="modalEditLabel">Edit Data Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formEdit">
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-muted small">ID Pesanan</label>
+                            <input type="text" class="form-control" id="editId" readonly
+                                style="background-color: #f8f9fa;">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-muted small">Nama Pelanggan</label>
+                            <input type="text" class="form-control" id="editNama">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Kendaraan</label>
+                                <input type="text" class="form-control" id="editKendaraan">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Plat Nomor</label>
+                                <input type="text" class="form-control" id="editPlat">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-muted small">Paket Servis</label>
+                            <select class="form-select" id="editPaket">
+                                <option value="Servis Ringan">Servis Ringan</option>
+                                <option value="Servis Sedang">Servis Sedang</option>
+                                <option value="Servis Berat">Servis Berat</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary rounded-3" onclick="saveEdit()">Simpan
+                        Perubahan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Status -->
+    <div class="modal fade" id="modalStatus" tabindex="-1" aria-labelledby="modalStatusLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow-sm">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title fw-bold" id="modalStatusLabel">Ubah Status</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="small text-muted mb-3">Perbarui status pengerjaan untuk <strong class="text-dark"
+                            id="statusPelanggan"></strong> (ID: <span id="statusIdPesanan"></span>).</p>
+
+                    <select class="form-select" id="selectStatus">
+                        <option value="menunggu">Menunggu</option>
+                        <option value="pemeriksaan">Pemeriksaan</option>
+                        <option value="dikerjakan">Dikerjakan</option>
+                        <option value="selesai">Selesai</option>
+                    </select>
+                </div>
+                <div class="modal-footer border-top-0 pt-0 mt-3">
+                    <button type="button" class="btn btn-secondary rounded-3 w-100 mb-2"
+                        data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-primary rounded-3 w-100 m-0" onclick="saveStatus()">Terapkan
+                        Status</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060; margin-top: 20px;">
+        <div id="liveToast" class="toast align-items-center text-white bg-success border-0 shadow-lg" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body fw-medium small" id="toastMessage">
+                    Data berhasil disimpan!
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pustaka Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // --- 1. Data Dummy Diperbarui ---
+        let rawData = [
+            { id: 'SV-00125', nama: 'Siti Rahmawati', kendaraan: 'Honda HR-V', plat: 'L 9982 AC', paket: 'Servis Sedang', status: 'dikerjakan', whatsapp: '081234567890', email: 'siti.r@email.com', merk: 'Honda', model: 'HR-V', tahun: '2019', tanggal_servis: '2026-06-25', tanggal_kedatangan: '2026-06-25', jam_kedatangan: '08:30 WIB', keluhan: 'AC kurang dingin dan rem berdecit' },
+            { id: 'SV-00126', nama: 'Rian Hidayat', kendaraan: 'Mitsubishi Pajero', plat: 'D 761 RI', paket: 'Servis Berat', status: 'selesai', whatsapp: '082198765432', email: 'rian.hid@email.com', merk: 'Mitsubishi', model: 'Pajero', tahun: '2020', tanggal_servis: '2026-06-24', tanggal_kedatangan: '2026-06-24', jam_kedatangan: '09:15 WIB', keluhan: 'Tarikan mesin berat, servis berkala besar' },
+            { id: 'SV-00127', nama: 'Denny Wijaya', kendaraan: 'Suzuki XL7', plat: 'F 2445 DW', paket: 'Servis Ringan', status: 'pemeriksaan', whatsapp: '085612349876', email: 'denny.w@email.com', merk: 'Suzuki', model: 'XL7', tahun: '2021', tanggal_servis: '2026-06-26', tanggal_kedatangan: '2026-06-26', jam_kedatangan: '10:00 WIB', keluhan: 'Cek kondisi aki dan ganti oli mesin' },
+        ];
+
+        // Konfigurasi Label Status & CSS Class
+        const statusConfig = {
+            'menunggu': { label: 'Menunggu', class: 'status-menunggu' },
+            'pemeriksaan': { label: 'Pemeriksaan', class: 'status-pemeriksaan' },
+            'dikerjakan': { label: 'Dikerjakan', class: 'status-dikerjakan' },
+            'selesai': { label: 'Selesai', class: 'status-selesai' }
+        };
+
+        // --- Variabel State ---
+        let filteredData = [...rawData];
+        let currentPage = 1;
+        const itemsPerPage = 8;
+        let activeFilter = 'all';
+
+        // --- 2. Inisialisasi DOM ---
+        document.addEventListener('DOMContentLoaded', () => {
+            renderTable();
+            setupEventListeners();
+        });
+
+        // --- 3. Fungsi Render Tabel & Pagination ---
+        function renderTable() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+            if (currentPage > totalPages && totalPages > 0) currentPage = totalPages;
+            if (currentPage < 1) currentPage = 1;
+
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const currentData = filteredData.slice(startIndex, endIndex);
+
+            if (currentData.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Tidak ada data ditemukan.</td></tr>`;
+            } else {
+                currentData.forEach(item => {
+                    const statusData = statusConfig[item.status];
+
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>
+                            <span class="fw-semibold-custom">${item.nama}</span>
+                            <span class="text-muted-custom">${item.id}</span>
+                        </td>
+                        <td>
+                            <span class="d-block">${item.kendaraan}</span>
+                            <span class="badge-plate">${item.plat}</span>
+                        </td>
+                        <td>${item.paket}</td>
+                        <td>
+                            <span class="status-badge ${statusData.class}">${statusData.label}</span>
+                        </td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-detail" onclick="openDetailModal('${item.id}')" title="Detail">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                                <button class="btn-action btn-edit" onclick="openEditModal('${item.id}')" title="Edit">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn-action btn-status" onclick="openStatusModal('${item.id}')" title="Ubah Status">
+                                    <i class="bi bi-arrow-repeat"></i>
+                                </button>
+                            </div>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }
+
+            document.getElementById('paginationInfo').innerHTML = `Menampilkan <span class="fw-bold text-dark">${currentData.length}</span> dari <span class="fw-bold text-dark">${filteredData.length}</span> pesanan`;
+            renderPaginationControls(totalPages);
+        }
+
+        function renderPaginationControls(totalPages) {
+            const controls = document.getElementById('paginationControls');
+            let html = `
+                <button class="page-btn nav-arrow" onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-left"></i>
+                </button>
+            `;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${currentPage === i ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            html += `
+                <button class="page-btn nav-arrow" onclick="changePage(${currentPage + 1})" ${currentPage === totalPages || totalPages === 0 ? 'disabled' : ''}>
+                    <i class="bi bi-chevron-right"></i>
+                </button>
+            `;
+            controls.innerHTML = html;
+        }
+
+        function changePage(page) {
+            currentPage = page;
+            renderTable();
+        }
+
+        // --- 4. Fungsi Pencarian dan Filter ---
+        function setupEventListeners() {
+            document.getElementById('searchInput').addEventListener('input', (e) => {
+                const term = e.target.value.toLowerCase();
+                applyFilters(term, activeFilter);
+            });
+
+            const filterOptions = document.querySelectorAll('.filter-option');
+            const currentFilterText = document.getElementById('currentFilterText');
+
+            filterOptions.forEach(option => {
+                option.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    filterOptions.forEach(opt => opt.classList.remove('active'));
+                    e.target.classList.add('active');
+                    currentFilterText.innerText = e.target.innerText;
+
+                    activeFilter = e.target.getAttribute('data-filter');
+                    const term = document.getElementById('searchInput').value.toLowerCase();
+                    applyFilters(term, activeFilter);
+                });
+            });
+
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            sidebarToggle.addEventListener('click', () => {
+                sidebar.classList.add('show');
+                overlay.classList.add('show');
+            });
+
+            overlay.addEventListener('click', () => {
+                sidebar.classList.remove('show');
+                overlay.classList.remove('show');
+            });
+        }
+
+        function applyFilters(searchTerm, filterStatus) {
+            filteredData = rawData.filter(item => {
+                const matchSearch = item.nama.toLowerCase().includes(searchTerm) ||
+                    item.kendaraan.toLowerCase().includes(searchTerm) ||
+                    item.plat.toLowerCase().includes(searchTerm) ||
+                    item.id.toLowerCase().includes(searchTerm);
+
+                const matchStatus = filterStatus === 'all' || item.status === filterStatus;
+                return matchSearch && matchStatus;
+            });
+            currentPage = 1;
+            renderTable();
+        }
+
+        // --- 5. Fungsi Logika Modal ---
+        let currentEditId = null;
+
+        function openDetailModal(id) {
+            const item = rawData.find(d => d.id === id);
+            if (item) {
+                document.getElementById('detailNama').innerText = item.nama;
+                document.getElementById('detailWhatsapp').innerText = item.whatsapp;
+                document.getElementById('detailEmail').innerText = item.email;
+                document.getElementById('detailPlat').innerText = item.plat;
+                document.getElementById('detailMerk').innerText = item.merk;
+                document.getElementById('detailModel').innerText = item.model;
+                document.getElementById('detailTahun').innerText = item.tahun;
+                document.getElementById('detailTanggalServis').innerText = item.tanggal_servis;
+                document.getElementById('detailTanggalKedatangan').innerText = item.tanggal_kedatangan;
+                document.getElementById('detailJamKedatangan').innerText = item.jam_kedatangan;
+                document.getElementById('detailKeluhan').innerText = item.keluhan;
+
+                new bootstrap.Modal(document.getElementById('modalDetail')).show();
+            }
+        }
+
+        function openEditModal(id) {
+            const item = rawData.find(d => d.id === id);
+            if (item) {
+                currentEditId = item.id;
+                document.getElementById('editId').value = item.id;
+                document.getElementById('editNama').value = item.nama;
+                document.getElementById('editKendaraan').value = item.kendaraan;
+                document.getElementById('editPlat').value = item.plat;
+                document.getElementById('editPaket').value = item.paket;
+
+                new bootstrap.Modal(document.getElementById('modalEdit')).show();
+            }
+        }
+
+        function saveEdit() {
+            const id = currentEditId;
+            const index = rawData.findIndex(d => d.id === id);
+            if (index !== -1) {
+                rawData[index].nama = document.getElementById('editNama').value;
+                rawData[index].kendaraan = document.getElementById('editKendaraan').value;
+                rawData[index].plat = document.getElementById('editPlat').value;
+                rawData[index].paket = document.getElementById('editPaket').value;
+
+                applyFilters(document.getElementById('searchInput').value.toLowerCase(), activeFilter);
+                bootstrap.Modal.getInstance(document.getElementById('modalEdit')).hide();
+                showNotification('Berhasil disimpan', 'success');
+            }
+        }
+
+        function openStatusModal(id) {
+            const item = rawData.find(d => d.id === id);
+            if (item) {
+                currentEditId = item.id;
+                document.getElementById('statusIdPesanan').innerText = item.id;
+                document.getElementById('statusPelanggan').innerText = item.nama;
+                document.getElementById('selectStatus').value = item.status;
+
+                new bootstrap.Modal(document.getElementById('modalStatus')).show();
+            }
+        }
+
+        function saveStatus() {
+            const id = currentEditId;
+            const index = rawData.findIndex(d => d.id === id);
+            const newStatus = document.getElementById('selectStatus').value;
+
+            if (index !== -1) {
+                rawData[index].status = newStatus;
+                applyFilters(document.getElementById('searchInput').value.toLowerCase(), activeFilter);
+                bootstrap.Modal.getInstance(document.getElementById('modalStatus')).hide();
+                showNotification('Berhasil disimpan', 'success');
+            }
+        }
+
+        // --- 6. Notifikasi Toast ---
+        function showNotification(message, type) {
+            const toastEl = document.getElementById('liveToast');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toastMessage.innerText = message;
+            toastEl.className = `toast align-items-center text-white border-0 shadow-lg bg-${type}`;
+
+            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+            toast.show();
+        }
+    </script>
+</body>
+
+</html>

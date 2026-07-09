@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Riwayat Pembayaran - Gandoz Mobil</title>
+
+    <!-- Pustaka Bootstrap 5 untuk utilitas grid dan komponen antarmuka -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Pustaka Bootstrap Icons untuk aset ikonografi -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!-- Tipografi utama: Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Pengaturan Dasar & Tipografi --- */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f6fc;
+            color: #333333;
+            overflow-x: hidden;
+        }
+
+        /* --- Komponen Bilah Sisi (Sidebar) --- */
+        .sidebar {
+            width: 260px;
+            height: 100vh;
+            background-color: #ffffff;
+            position: fixed;
+            top: 0;
+            left: 0;
+            border-right: 1px solid #eef0f5;
+            display: flex;
+            flex-direction: column;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .brand-logo-container {
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background-color: #1a73e8;
+            color: white;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.2rem;
+        }
+
+        .brand-text h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 0;
+            color: #1a73e8;
+        }
+
+        .brand-text p {
+            font-size: 0.75rem;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .nav-menu {
+            list-style: none;
+            padding: 0;
+            margin: 20px 0 0 0;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            margin-bottom: 5px;
+        }
+
+        .nav-link-custom {
+            display: flex;
+            align-items: center;
+            padding: 12px 24px;
+            color: #6c757d;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .nav-link-custom i {
+            margin-right: 15px;
+            font-size: 1.1rem;
+        }
+
+        .nav-link-custom:hover {
+            background-color: #f8f9fa;
+            color: #1a73e8;
+        }
+
+        /* Status Aktif untuk Navigasi Pembayaran */
+        .nav-link-custom.active {
+            background-color: #f0f5ff;
+            color: #1a73e8;
+            border-left: 4px solid #1a73e8;
+            font-weight: 600;
+        }
+
+        .user-profile {
+            padding: 20px 24px;
+            border-top: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .user-info-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .user-details h6 {
+            margin: 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .user-details p {
+            margin: 0;
+            font-size: 0.75rem;
+            color: #6c757d;
+        }
+
+        /* --- Area Konten Utama --- */
+        .main-content {
+            margin-left: 260px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease-in-out;
+        }
+
+        /* --- Header (Bilah Pencarian) --- */
+        .top-header {
+            background-color: #ffffff;
+            padding: 16px 32px;
+            border-bottom: 1px solid #eef0f5;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-bar {
+            width: 100%;
+            max-width: 800px;
+            position: relative;
+        }
+
+        .search-bar i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #adb5bd;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px 10px 45px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .search-input:focus {
+            border-color: #a8c1f8;
+            background-color: #ffffff;
+        }
+
+        /* --- Ruang Konten Dalam --- */
+        .content-padding {
+            padding: 32px;
+        }
+
+        .page-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .page-subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+        }
+
+        /* --- Desain Kartu & Kontrol Atas Tabel --- */
+        .custom-card {
+            background: #ffffff;
+            border: 1px solid #eef0f5;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            overflow: hidden;
+        }
+
+        .table-controls {
+            padding: 20px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eef0f5;
+            background-color: #ffffff;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .controls-left {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-control {
+            border: 1px solid #e9ecef;
+            background-color: #ffffff;
+            color: #333333;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-control:hover {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
+        /* --- Desain Tabel Pembayaran --- */
+        .table-custom {
+            margin-bottom: 0;
+            border-collapse: separate;
+            border-spacing: 0;
+            width: 100%;
+        }
+
+        .table-custom th {
+            font-weight: 600;
+            color: #6c757d;
+            font-size: 0.85rem;
+            padding: 16px 24px;
+            border-bottom: 1px solid #eef0f5;
+            border-top: none;
+            background-color: #fcfdfd;
+        }
+
+        .table-custom td {
+            vertical-align: middle;
+            padding: 16px 24px;
+            border-bottom: 1px solid #eef0f5;
+            color: #333333;
+            font-size: 0.9rem;
+        }
+
+        .table-custom tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table-custom tbody tr {
+            transition: background-color 0.2s;
+        }
+
+        .table-custom tbody tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        /* Tipografi & Elemen Khusus dalam Tabel */
+        .tx-id {
+            color: #1a73e8;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .tx-id:hover {
+            text-decoration: underline;
+        }
+
+        .customer-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-initial {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            flex-shrink: 0;
+        }
+
+        .avatar-blue {
+            background-color: #e8f0fe;
+            color: #1a73e8;
+        }
+
+        .avatar-gray {
+            background-color: #f1f3f5;
+            color: #6c757d;
+        }
+
+        .avatar-teal {
+            background-color: #e0f7fa;
+            color: #00838f;
+        }
+
+        .avatar-indigo {
+            background-color: #e8eaf6;
+            color: #3f51b5;
+        }
+
+        .avatar-orange {
+            background-color: #fff3e0;
+            color: #ef6c00;
+        }
+
+        .avatar-purple {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .fw-semibold-custom {
+            font-weight: 600;
+            color: #212529;
+        }
+
+        .text-muted-custom {
+            color: #8e95a0;
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 2px;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .status-lunas {
+            background-color: #e6f6eb;
+            color: #20c997;
+        }
+
+        .status-belum {
+            background-color: #fce8e6;
+            color: #ea4335;
+        }
+
+        /* Tombol Aksi */
+        .action-icon-btn {
+            background: transparent;
+            border: none;
+            color: #6c757d;
+            font-size: 1.1rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .action-icon-btn:hover {
+            color: #1a73e8;
+            background-color: #f8f9fa;
+        }
+
+        .action-icon-btn.btn-delete:hover {
+            color: #dc3545;
+            background-color: #f8d7da;
+        }
+
+        /* --- Footer Tabel & Pagination --- */
+        .table-footer {
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #eef0f5;
+            background-color: #ffffff;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pagination-info {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .page-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            background: #ffffff;
+            color: #333333;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .page-btn:hover:not(.active):not(:disabled) {
+            background-color: #f8f9fa;
+        }
+
+        .page-btn.active {
+            background-color: #1a73e8;
+            color: white;
+            border-color: #1a73e8;
+        }
+
+        .page-btn:disabled {
+            background-color: #f1f3f5;
+            color: #adb5bd;
+            cursor: not-allowed;
+            border-color: #e9ecef;
+        }
+
+        /* --- Responsivitas Lanjutan (Media Queries) --- */
+        .sidebar-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+
+        .sidebar-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Layar Tablet & Desktop Kecil */
+        @media (max-width: 991px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .top-header {
+                padding: 16px 20px;
+            }
+
+            .content-padding {
+                padding: 24px 20px;
+            }
+
+            .sidebar .brand-logo-container {
+                padding: 20px 24px;
+            }
+
+            .sidebar .user-profile {
+                padding: 16px 24px;
+            }
+        }
+
+        /* Layar Tablet Kecil & Mobile Landscape */
+        @media (max-width: 768px) {
+            .table-controls {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 16px;
+            }
+
+            .controls-left {
+                width: 100%;
+            }
+
+            .controls-left .dropdown,
+            .controls-left .dropdown .btn-control {
+                width: 100%;
+            }
+
+            .controls-left .dropdown .btn-control {
+                justify-content: space-between;
+            }
+
+            .btn-control {
+                width: 100%;
+                justify-content: center;
+            }
+
+            /* Izinkan teks tabel membungkus */
+            .table-custom th,
+            .table-custom td {
+                white-space: normal;
+                word-break: break-word;
+            }
+
+            .table-custom th {
+                padding: 12px 16px;
+                font-size: 0.8rem;
+            }
+
+            .table-custom td {
+                padding: 12px 16px;
+                font-size: 0.85rem;
+            }
+
+            .customer-info {
+                gap: 8px;
+            }
+
+            .avatar-initial {
+                width: 30px;
+                height: 30px;
+                font-size: 0.75rem;
+            }
+
+            .table-footer {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+                padding: 16px;
+            }
+
+            .pagination-controls {
+                justify-content: center;
+                width: 100%;
+            }
+        }
+
+        /* Layar Smartphone (Mobile Portrait) */
+        @media (max-width: 576px) {
+            .top-header {
+                padding: 12px 16px;
+            }
+
+            .search-input {
+                font-size: 0.9rem;
+            }
+
+            .content-padding {
+                padding: 20px 16px;
+            }
+
+            .page-title {
+                font-size: 1.35rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.85rem;
+                margin-bottom: 16px;
+            }
+
+            .custom-card {
+                border-radius: 8px;
+            }
+
+            .table-custom th {
+                padding: 10px 12px;
+                font-size: 0.75rem;
+            }
+
+            .table-custom td {
+                padding: 10px 12px;
+                font-size: 0.8rem;
+            }
+
+            .customer-info {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 4px;
+            }
+
+            .avatar-initial {
+                width: 26px;
+                height: 26px;
+                font-size: 0.7rem;
+            }
+
+            .text-muted-custom {
+                font-size: 0.7rem;
+            }
+
+            .status-badge {
+                padding: 3px 8px;
+                font-size: 0.65rem;
+            }
+
+            .action-icon-btn {
+                font-size: 1rem;
+                padding: 3px 6px;
+            }
+
+            /* Penyesuaian Modal */
+            .modal-dialog {
+                margin: 10px;
+            }
+
+            .modal-body {
+                padding: 20px;
+            }
+
+            .modal-body h5 {
+                font-size: 1.1rem;
+            }
+
+            .modal-body .d-flex.gap-2 {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .modal-body .d-flex.gap-2 .btn {
+                width: 100%;
+            }
+
+            .tx-id {
+                font-size: 0.85rem;
+            }
+        }
+
+        /* Layar Handphone Kecil (max 480px) */
+        @media (max-width: 480px) {
+            .content-padding {
+                padding: 16px 12px;
+            }
+
+            .page-title {
+                font-size: 1.15rem;
+            }
+
+            .page-subtitle {
+                font-size: 0.8rem;
+                margin-bottom: 12px;
+            }
+
+            .table-custom th {
+                padding: 8px 10px;
+                font-size: 0.7rem;
+            }
+
+            .table-custom td {
+                padding: 8px 10px;
+                font-size: 0.75rem;
+            }
+
+            .table-controls {
+                padding: 12px;
+                gap: 10px;
+            }
+
+            .btn-control {
+                font-size: 0.8rem;
+                padding: 6px 12px;
+            }
+
+            .status-badge {
+                padding: 2px 6px;
+                font-size: 0.6rem;
+            }
+
+            .action-icon-btn {
+                font-size: 0.9rem;
+                padding: 2px 5px;
+            }
+
+            .pagination-info {
+                font-size: 0.75rem;
+            }
+
+            .page-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 0.75rem;
+            }
+
+            .table-footer {
+                padding: 10px 12px;
+            }
+
+            .modal-dialog {
+                margin: 8px;
+            }
+
+            .modal-body {
+                padding: 16px;
+            }
+
+            .sidebar .brand-logo-container {
+                padding: 16px;
+                gap: 10px;
+            }
+
+            .sidebar .brand-icon {
+                width: 36px;
+                height: 36px;
+                font-size: 1rem;
+            }
+
+            .sidebar .brand-text h1 {
+                font-size: 1rem;
+            }
+
+            .sidebar .brand-text p {
+                font-size: 0.7rem;
+            }
+
+            .sidebar .user-profile {
+                padding: 16px;
+            }
+
+            .sidebar .user-avatar {
+                width: 36px;
+                height: 36px;
+            }
+        }
+
+        /* Layar Sangat Kecil (max 380px) */
+        @media (max-width: 380px) {
+            .top-header {
+                padding: 10px;
+                gap: 8px;
+            }
+
+            .search-input {
+                font-size: 0.8rem;
+                padding: 8px 10px 8px 32px;
+            }
+
+            .search-bar i {
+                left: 10px;
+                font-size: 0.8rem;
+            }
+
+            .content-padding {
+                padding: 12px 8px;
+            }
+
+            .custom-card {
+                border-radius: 6px;
+            }
+
+            .table-custom th {
+                padding: 6px 8px;
+                font-size: 0.6rem;
+            }
+
+            .table-custom td {
+                padding: 6px 8px;
+                font-size: 0.7rem;
+            }
+
+            .page-btn {
+                width: 24px;
+                height: 24px;
+                font-size: 0.65rem;
+            }
+
+            .modal-dialog {
+                margin: 4px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="d-flex">
+        <!-- ================= BILAH SISI (SIDEBAR) ================= -->
+        <aside class="sidebar">
+            <a href="dashboard.html" class="brand-logo-container" style="text-decoration: none; color: inherit;">
+                <div class="brand-icon">
+                    <i class="bi bi-car-front-fill"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>Gandoz Mobil</h1>
+                    <p>Admin Workshop</p>
+                </div>
+            </a>
+
+            <ul class="nav-menu">
+                <li class="nav-item">
+                    <a href="dashboard.html" class="nav-link-custom">
+                        <i class="bi bi-grid-1x2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pesanan_servis.html" class="nav-link-custom">
+                        <i class="bi bi-tools"></i> Pesanan Servis
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pembayaran.html" class="nav-link-custom active">
+                        <i class="bi bi-wallet2"></i> Pembayaran
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="laporan.html" class="nav-link-custom">
+                        <i class="bi bi-file-earmark-text"></i> Laporan
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="pengaturan.html" class="nav-link-custom">
+                        <i class="bi bi-gear"></i> Pengaturan
+                    </a>
+                </li>
+            </ul>
+
+            <div class="user-profile">
+                <div class="user-info-wrapper">
+                    <img src="https://ui-avatars.com/api/?name=Budi+Santoso&background=e9ecef&color=333"
+                        alt="Budi Santoso" class="user-avatar">
+                    <div class="user-details">
+                        <h6>Budi Santoso</h6>
+                        <p>Super Admin</p>
+                    </div>
+                </div>
+                <a href="login.html" class="btn text-secondary border-0 p-0">
+                    <i class="bi bi-box-arrow-right"></i>
+                </a>
+            </div>
+        </aside>
+
+        <!-- ================= KONTEN UTAMA ================= -->
+        <main class="main-content flex-grow-1">
+
+            <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+            <!-- Header Atas (Pencarian) -->
+            <header class="top-header">
+                <button id="sidebarToggle" class="btn btn-link d-lg-none me-3 text-dark p-0 border-0">
+                    <i class="bi bi-list fs-3"></i>
+                </button>
+                <div class="search-bar">
+                    <i class="bi bi-search"></i>
+                    <input type="text" class="search-input" placeholder="Cari kendaraan, pelanggan, atau invoice..."
+                        id="searchInput">
+                </div>
+            </header>
+
+            <!-- Area Data Riwayat Pembayaran -->
+            <div class="content-padding">
+                <h2 class="page-title">Riwayat Pembayaran</h2>
+                <p class="page-subtitle">Kelola dan pantau seluruh transaksi bengkel Gandoz Mobil secara real-time.</p>
+
+                <!-- Komponen Kontainer Tabel -->
+                <div class="custom-card">
+
+                    <!-- Kontrol Tabel (Filter Dropdown & Export) -->
+                    <div class="table-controls">
+                        <div class="controls-left">
+                            <!-- Dropdown Filter Pengganti Modal -->
+                            <div class="dropdown">
+                                <button class="btn-control dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    <i class="bi bi-filter"></i> <span id="currentFilterText">Semua Status</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item filter-option" href="#" data-value="all">Semua
+                                            Status</a></li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-value="lunas">Lunas</a>
+                                    </li>
+                                    <li><a class="dropdown-item filter-option" href="#" data-value="belum">Belum
+                                            Bayar</a></li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <button class="btn-control" onclick="exportData()">
+                            <i class="bi bi-file-earmark-pdf text-danger"></i> Export PDF
+                        </button>
+                    </div>
+
+                    <!-- Tabel Data -->
+                    <div class="table-responsive">
+                        <table class="table-custom">
+                            <thead>
+                                <tr>
+                                    <th>ID Transaksi</th>
+                                    <th>Nama Pelanggan</th>
+                                    <th>Tanggal</th>
+                                    <th>Total Tagihan</th>
+                                    <th>Metode</th>
+                                    <th>Status</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paymentTableBody">
+                                <!-- Baris dirender melalui JavaScript -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Footer Tabel & Pagination Dinamis -->
+                    <div class="table-footer">
+                        <div class="pagination-info" id="paginationInfo">
+                            Menampilkan <span class="fw-bold">0</span> dari 0 transaksi
+                        </div>
+                        <div class="pagination-controls" id="paginationControls">
+                            <!-- Tombol panah dan angka di-generate via JS -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- ================= KUMPULAN KOMPONEN MODAL (DIALOG) ================= -->
+
+    <!-- Modal Konfirmasi Hapus Data -->
+    <div class="modal fade" id="modalDeleteConfirm" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-body text-center p-4">
+                    <div class="text-danger mb-3">
+                        <i class="bi bi-exclamation-circle" style="font-size: 3rem;"></i>
+                    </div>
+                    <h5 class="fw-bold mb-2">Hapus Transaksi?</h5>
+                    <p class="text-muted small mb-4">Anda yakin ingin menghapus data transaksi <strong
+                            id="deleteTxIdDisplay"></strong>? Tindakan ini tidak dapat dibatalkan.</p>
+
+                    <div class="d-flex gap-2 justify-content-center">
+                        <button type="button" class="btn btn-light rounded-3 px-4"
+                            data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-danger rounded-3 px-4" id="btnConfirmDelete">Hapus</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Pustaka Bootstrap (Dibutuhkan untuk komponen interaktif) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Pustaka jsPDF & AutoTable untuk fungsionalitas Export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Skrip Konstruksi dan Manipulasi DOM -->
+    <script>
+        // 1. Basis Data Simulasi (Digabung jadi satu array untuk memudahkan filter dan pagination client-side)
+        let allPaymentData = [
+            // Halaman 1 simulasi
+            { id: '#TX-90211', initial: 'AS', avatarClass: 'avatar-blue', name: 'Andi Saputra', car: 'Toyota Avanza (AB 1234 BC)', date: '24 Oct 2023, 14:20', total: 'Rp 1.250.000', method: 'Transfer BCA', status: 'lunas', statusLabel: 'Lunas', url: '../detail_transaksi1.html' },
+            { id: '#TX-90212', initial: 'BW', avatarClass: 'avatar-gray', name: 'Budi Wijaya', car: 'Honda Civic (AB 5678 YZ)', date: '24 Oct 2023, 15:05', total: 'Rp 4.500.000', method: 'Transfer Mandiri', status: 'lunas', statusLabel: 'Lunas', url: '../detail_transaksi2.html' },
+            { id: '#TX-90213', initial: 'CH', avatarClass: 'avatar-teal', name: 'Citra Halim', car: 'Mitsubishi Pajero (AB 3499 SS)', date: '24 Oct 2023, 16:45', total: 'Rp 1.225.000', method: 'Transfer BRI', status: 'lunas', statusLabel: 'Lunas', url: '../detail_transaksi3.html' },
+        ];
+
+        // State Aplikasi
+        let currentPage = 1;
+        const itemsPerPage = 3;
+        let currentFilterStatus = 'all';
+        let searchQuery = '';
+        let itemToDeleteId = null; // Menyimpan ID sementara saat modal hapus muncul
+
+        // Instance Modal Bootstrap
+        let deleteModalInstance;
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            // Inisialisasi Modal
+            deleteModalInstance = new bootstrap.Modal(document.getElementById('modalDeleteConfirm'));
+
+            // Logika Navigasi Overlay (Mobile Environment)
+            const sidebar = document.querySelector('.sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const overlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle && overlay) {
+                sidebarToggle.addEventListener('click', () => {
+                    sidebar.classList.add('show');
+                    overlay.classList.add('show');
+                });
+                overlay.addEventListener('click', () => {
+                    sidebar.classList.remove('show');
+                    overlay.classList.remove('show');
+                });
+            }
+
+            // Event Listener Pencarian
+            document.getElementById('searchInput').addEventListener('input', function (e) {
+                searchQuery = e.target.value.toLowerCase();
+                currentPage = 1; // Kembali ke halaman 1 saat mencari
+                renderTable();
+            });
+
+            // Event Listener Dropdown Filter
+            document.querySelectorAll('.filter-option').forEach(item => {
+                item.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    currentFilterStatus = this.getAttribute('data-value');
+                    document.getElementById('currentFilterText').innerText = this.innerText;
+                    currentPage = 1; // Kembali ke halaman 1 saat filter berubah
+                    renderTable();
+                });
+            });
+
+            // Event Listener Tombol Konfirmasi Hapus di Modal
+            document.getElementById('btnConfirmDelete').addEventListener('click', function () {
+                if (itemToDeleteId) {
+                    // Hapus data dari array berdasarkan ID
+                    allPaymentData = allPaymentData.filter(item => item.id !== itemToDeleteId);
+
+                    deleteModalInstance.hide();
+                    itemToDeleteId = null;
+
+                    // Cek jika halaman saat ini kosong setelah dihapus, mundur 1 halaman
+                    const filteredData = getFilteredData();
+                    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+                    if (currentPage > totalPages && currentPage > 1) {
+                        currentPage = totalPages;
+                    }
+
+                    renderTable();
+                }
+            });
+
+            // Render awal
+            renderTable();
+        });
+
+        // --- Fungsi Helper untuk Filter Data ---
+        function getFilteredData() {
+            return allPaymentData.filter(item => {
+                const matchesSearch =
+                    item.id.toLowerCase().includes(searchQuery) ||
+                    item.name.toLowerCase().includes(searchQuery) ||
+                    item.car.toLowerCase().includes(searchQuery);
+
+                const matchesStatus =
+                    currentFilterStatus === 'all' ||
+                    item.status === currentFilterStatus;
+
+                return matchesSearch && matchesStatus;
+            });
+        }
+
+        // --- Algoritma Utama Rendering Tabel & Paginasi ---
+        function renderTable() {
+            const tbody = document.getElementById('paymentTableBody');
+            const paginationContainer = document.getElementById('paginationControls');
+
+            // Dapatkan data yang sudah di-filter
+            const filteredData = getFilteredData();
+            const totalItems = filteredData.length;
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+            // Potong array berdasarkan halaman saat ini (Pagination)
+            const startIndex = (currentPage - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = filteredData.slice(startIndex, endIndex);
+
+            tbody.innerHTML = '';
+
+            // Render Baris Data
+            if (paginatedData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Data transaksi tidak ditemukan.</td></tr>`;
+            } else {
+                let rowsHTML = '';
+                paginatedData.forEach(item => {
+                    const badgeClass = item.status === 'lunas' ? 'status-lunas' : 'status-belum';
+
+                    // Tombol Hapus (ikon trash) menggantikan Cetak (ikon printer)
+                    rowsHTML += `
+                    <tr>
+                        <td><a href="${item.url}" class="tx-id">${item.id}</a></td>
+                        <td>
+                            <div class="customer-info">
+                                <div class="avatar-initial ${item.avatarClass}">${item.initial}</div>
+                                <div>
+                                    <span class="fw-semibold-custom">${item.name}</span>
+                                    <span class="text-muted-custom">${item.car}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>${item.date}</td>
+                        <td class="fw-bold">${item.total}</td>
+                        <td>${item.method}</td>
+                        <td><span class="status-badge ${badgeClass}">${item.statusLabel}</span></td>
+                        <td>
+                            <!-- URL juga ditambahkan pada action-icon-btn agar tombol Detail dapat berfungsi lagi -->
+                            <button class="action-icon-btn" onclick="window.location.href='${item.url}'" title="Detail"><i class="bi bi-eye"></i></button>
+                            <button class="action-icon-btn btn-delete" onclick="showDeleteModal('${item.id}')" title="Hapus"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>`;
+                });
+                tbody.innerHTML = rowsHTML;
+            }
+
+            // Render Info Teks Pagination
+            const currentItemCountDisplay = paginatedData.length > 0 ? `${startIndex + 1}-${Math.min(endIndex, totalItems)}` : '0';
+            document.getElementById('paginationInfo').innerHTML = `Menampilkan <span class="fw-bold">${currentItemCountDisplay}</span> dari ${totalItems} transaksi`;
+
+            // Render Tombol Pagination Dinamis (Mendukung Next/Prev yang berfungsi)
+            let paginationHTML = '';
+
+            // Tombol Prev
+            const prevDisabled = currentPage === 1 || totalPages === 0 ? 'disabled' : '';
+            paginationHTML += `<button class="page-btn nav-arrow" onclick="changePage(${currentPage - 1})" ${prevDisabled}><i class="bi bi-chevron-left"></i></button>`;
+
+            // Tombol Angka
+            for (let i = 1; i <= totalPages; i++) {
+                const activeClass = i === currentPage ? 'active' : '';
+                paginationHTML += `<button class="page-btn ${activeClass}" onclick="changePage(${i})">${i}</button>`;
+            }
+
+            // Tombol Next
+            const nextDisabled = currentPage === totalPages || totalPages === 0 ? 'disabled' : '';
+            paginationHTML += `<button class="page-btn nav-arrow" onclick="changePage(${currentPage + 1})" ${nextDisabled}><i class="bi bi-chevron-right"></i></button>`;
+
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        // --- Fungsi Eksekusi Interaktif ---
+
+        // Fungsi untuk berpindah halaman
+        function changePage(newPage) {
+            const totalPages = Math.ceil(getFilteredData().length / itemsPerPage);
+            if (newPage >= 1 && newPage <= totalPages) {
+                currentPage = newPage;
+                renderTable();
+            }
+        }
+
+        // Fungsi Menampilkan Modal Hapus
+        function showDeleteModal(id) {
+            itemToDeleteId = id; // Simpan ID
+            document.getElementById('deleteTxIdDisplay').innerText = id; // Tampilkan ID di dalam pop up
+            deleteModalInstance.show(); // Tampilkan modal
+        }
+
+        // Fungsi Ekspor ke PDF
+        function exportData() {
+            // Ambil objek jsPDF dari library
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape'); // Menggunakan orientasi lanskap agar tabel muat
+
+            // Atur Judul Laporan
+            doc.setFontSize(16);
+            doc.text("Laporan Riwayat Pembayaran - Gandoz Mobil", 14, 20);
+
+            // Atur Info Tanggal Cetak & Filter Aktif
+            doc.setFontSize(10);
+            const today = new Date().toLocaleDateString('id-ID');
+            const filterText = document.getElementById('currentFilterText').innerText;
+            doc.text(`Tanggal Cetak: ${today} | Filter Status: ${filterText}`, 14, 28);
+
+            // Persiapkan Data Tabel (Hanya data yang sedang terfilter)
+            const exportData = getFilteredData();
+
+            // Header Kolom Tabel
+            const tableColumns = [
+                "ID Transaksi",
+                "Nama Pelanggan",
+                "Kendaraan",
+                "Tanggal",
+                "Total Tagihan",
+                "Metode",
+                "Status"
+            ];
+
+            // Petakan data ke bentuk baris array
+            const tableRows = exportData.map(item => [
+                item.id,
+                item.name,
+                item.car,
+                item.date,
+                item.total,
+                item.method,
+                item.statusLabel
+            ]);
+
+            // Render Tabel Otomatis
+            doc.autoTable({
+                head: [tableColumns],
+                body: tableRows,
+                startY: 35,
+                theme: 'striped',
+                headStyles: { fillColor: [26, 115, 232] }, // Warna biru menyesuaikan brand Gandoz Mobil
+                styles: { fontSize: 9, cellPadding: 3 }
+            });
+
+            // Eksekusi Unduh File PDF
+            doc.save("Riwayat_Pembayaran_Gandoz_Mobil.pdf");
+        }
+    </script>
+</body>
+
+</html>

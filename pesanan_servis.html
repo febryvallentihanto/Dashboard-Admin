@@ -178,7 +178,7 @@
 
         .search-bar {
             width: 100%;
-            max-width: 800px;
+            max-width: 100%;
             position: relative;
         }
 
@@ -423,7 +423,7 @@
             justify-content: space-between;
             align-items: center;
             border-top: 1px solid #eef0f5;
-            background-color: #fcfdfd;
+            background-color: #ffffff;
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
             flex-wrap: wrap;
@@ -447,8 +447,8 @@
             justify-content: center;
             align-items: center;
             border-radius: 6px;
-            border: none;
-            background: transparent;
+            border: 1px solid #e9ecef;
+            background: #ffffff;
             color: #333333;
             font-size: 0.85rem;
             font-weight: 500;
@@ -867,9 +867,9 @@
                         <p>Super Admin</p>
                     </div>
                 </div>
-                <a href="login.html" class="btn-logout" title="Logout">
+                <button type="button" class="btn-logout" title="Logout" onclick="window.location.href='login.html'">
                     <i class="bi bi-box-arrow-right"></i>
-                </a>
+                </button>
             </div>
         </aside>
 

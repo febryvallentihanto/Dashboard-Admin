@@ -172,7 +172,7 @@
 
         .search-bar {
             width: 100%;
-            max-width: 800px;
+            max-width: 100%;
             position: relative;
         }
 
@@ -235,6 +235,29 @@
             color: #111827;
         }
 
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn-back {
+            background-color: #ffffff;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-back:hover {
+            background-color: #f3f4f6;
+            color: #111827;
+        }
+
         .btn-print {
             background-color: #0047a5;
             border: none;
@@ -287,8 +310,8 @@
         .status-badge-lunas {
             display: inline-flex;
             align-items: center;
-            background-color: #e6f6eb;
-            color: #20c997;
+            background-color: #ecfdf5;
+            color: #059669;
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
@@ -296,10 +319,10 @@
             gap: 6px;
         }
 
-        .status-dot-lunas {
+        .status-dot {
             width: 6px;
             height: 6px;
-            background-color: #20c997;
+            background-color: #059669;
             border-radius: 50%;
         }
 
@@ -530,12 +553,43 @@
                 }
 
         @media (max-width: 576px) {
+            .page-header-actions {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .tx-id-container {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+
+            .tx-date-info {
+                text-align: left;
+                margin-top: 16px;
+            }
+
+            .detail-table th,
+            .detail-table td {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+
+            .total-amount {
+                font-size: 2rem;
+            }
+
             .search-input {
                 font-size: 0.9rem;
             }
         }
 
         @media (max-width: 380px) {
+            .top-header {
+                padding: 10px;
+                gap: 8px;
+            }
+
             .search-input {
                 font-size: 0.8rem;
                 padding: 8px 10px 8px 32px;
@@ -543,6 +597,14 @@
             .search-bar i {
                 left: 10px;
                 font-size: 0.8rem;
+            }
+
+            .content-padding {
+                padding: 12px 8px;
+            }
+
+            .detail-card {
+                border-radius: 6px;
             }
         }
     </style>
@@ -576,7 +638,7 @@
                         alt="Budi Santoso" class="user-avatar">
                     <div class="user-details">
                         <h6>Budi Santoso</h6>
-                        <p style="text-transform: capitalize; font-weight: normal;">Super Admin</p>
+                        <p>Super Admin</p>
                     </div>
                 </div>
 <button type="button" class="btn-logout" title="Logout"
@@ -601,6 +663,9 @@
                 <div class="page-header-actions">
                     <h2 class="page-title">Detail Transaksi</h2>
                     <div class="action-buttons">
+                        <button class="btn-back" onclick="window.location.href='pembayaran.html'">
+                            <i class="bi bi-arrow-left"></i> Kembali
+                        </button>
                         <button class="btn-print" onclick="window.print()"><i class="bi bi-printer"></i> Cetak
                             Invoice</button>
                     </div>
@@ -610,7 +675,7 @@
                     <div class="card-header-top">
                         <div class="tx-id-container">
                             <h2 class="tx-id-text">#TX-90212</h2>
-                            <span class="status-badge-lunas"><span class="status-dot-lunas"></span> Lunas</span>
+                            <span class="status-badge-lunas"><span class="status-dot"></span> Lunas</span>
                         </div>
                         <div class="tx-date-info">
                             <div class="tx-date-label">Waktu Transaksi</div>

@@ -180,7 +180,7 @@
 
         .search-bar {
             width: 100%;
-            max-width: 800px;
+            max-width: 100%;
             position: relative;
         }
 
@@ -228,7 +228,7 @@
         /* --- Desain Kartu (Card) --- */
         .custom-card {
             background: #ffffff;
-            border: none;
+            border: 1px solid #eef0f5;
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
             padding: 24px;
@@ -479,7 +479,7 @@
                     </div>
                 </div>
                 <!-- Mengubah link href menuju halaman login.html untuk fungsi logout -->
-                <a href="login.html" class="btn-logout" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
+                <button type="button" class="btn-logout" title="Logout" onclick="window.location.href='login.html'"><i class="bi bi-box-arrow-right"></i></button>
             </div>
         </aside>
 
@@ -604,10 +604,10 @@
                     <div class="col-lg-4">
                         <div class="custom-card">
                             <div class="d-flex justify-content-between align-items-center mb-4">
-                                <h5 class="fw-bold mb-0">Aktivitas<br>Terbaru</h5>
+                                <h5 class="fw-bold mb-0">Aktivitas Terbaru</h5>
                                 <!-- Mengubah link ke pesanan_servis.html -->
                                 <a href="pesanan_servis.html"
-                                    class="text-decoration-none text-primary small fw-semibold">Lihat<br>Semua</a>
+                                    class="text-decoration-none text-primary small fw-semibold">Lihat Semua</a>
                             </div>
 
                             <div class="activity-list">
@@ -617,9 +617,9 @@
                                         <i class="bi bi-check-circle-fill"></i>
                                     </div>
                                     <div class="activity-details">
-                                        <h6>Toyota Avanza (B 1234 GZ)</h6>
-                                        <p>Selesai Ganti Oli & Filter</p>
-                                        <span class="activity-time">10 menit yang lalu</span>
+                                        <h6>Toyota Avanza</h6>
+                                        <p>Ganti Oli &amp; Filter</p>
+                                        <span class="activity-time">10 menit lalu</span>
                                     </div>
                                 </div>
 
@@ -629,33 +629,33 @@
                                         <i class="bi bi-arrow-repeat"></i>
                                     </div>
                                     <div class="activity-details">
-                                        <h6>Honda Civic (D 888 CP)</h6>
-                                        <p>Menunggu Sparepart (Kampas Rem)</p>
-                                        <span class="activity-time">25 menit yang lalu</span>
+                                        <h6>Honda Civic</h6>
+                                        <p>Tunggu Sparepart</p>
+                                        <span class="activity-time">25 menit lalu</span>
                                     </div>
                                 </div>
 
                                 <!-- Item 3 -->
                                 <div class="activity-item">
-                                    <div class="activity-icon bg-secondary-subtle text-secondary">
+                                    <div class="activity-icon icon-cyan">
                                         <i class="bi bi-person-fill"></i>
                                     </div>
                                     <div class="activity-details">
-                                        <h6>Booking Baru: Mitsubishi Pajero</h6>
-                                        <p>Oleh: Pak Slamet - Besok 09:00</p>
-                                        <span class="activity-time">1 jam yang lalu</span>
+                                        <h6>Mitsubishi Pajero</h6>
+                                        <p>Booking Baru</p>
+                                        <span class="activity-time">1 jam lalu</span>
                                     </div>
                                 </div>
 
                                 <!-- Item 4 -->
                                 <div class="activity-item">
-                                    <div class="activity-icon bg-danger-subtle text-danger">
+                                    <div class="activity-icon icon-gray">
                                         <i class="bi bi-exclamation-circle-fill"></i>
                                     </div>
                                     <div class="activity-details">
-                                        <h6>Pembayaran Tertunda</h6>
-                                        <p>Invoice #INV-00982 (Suzuki Ertiga)</p>
-                                        <span class="activity-time">3 jam yang lalu</span>
+                                        <h6>Suzuki Ertiga</h6>
+                                        <p>Pembayaran Tertunda</p>
+                                        <span class="activity-time">3 jam lalu</span>
                                     </div>
                                 </div>
                             </div>

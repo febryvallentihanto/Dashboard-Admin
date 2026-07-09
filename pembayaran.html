@@ -178,7 +178,7 @@
 
         .search-bar {
             width: 100%;
-            max-width: 800px;
+            max-width: 100%;
             position: relative;
         }
 
@@ -884,7 +884,7 @@
     <div class="d-flex">
         <!-- ================= BILAH SISI (SIDEBAR) ================= -->
         <aside class="sidebar">
-            <a href="dashboard.html" class="brand-logo-container" style="text-decoration: none; color: inherit;">
+            <div class="brand-logo-container">
                 <div class="brand-icon">
                     <i class="bi bi-car-front-fill"></i>
                 </div>
@@ -892,7 +892,7 @@
                     <h1>Gandoz Mobil</h1>
                     <p>Admin Workshop</p>
                 </div>
-            </a>
+            </div>
 
             <ul class="nav-menu">
                 <li class="nav-item">
@@ -931,9 +931,9 @@
                         <p>Super Admin</p>
                     </div>
                 </div>
-                <a href="login.html" class="btn-logout" title="Logout">
+                <button type="button" class="btn-logout" title="Logout" onclick="window.location.href='login.html'">
                     <i class="bi bi-box-arrow-right"></i>
-                </a>
+                </button>
             </div>
         </aside>
 
@@ -1133,9 +1133,9 @@
         // 1. Basis Data Simulasi (Digabung jadi satu array untuk memudahkan filter dan pagination client-side)
         let allPaymentData = [
             // Halaman 1 simulasi
-            { id: '#TX-90211', initial: 'AS', avatarClass: 'avatar-blue', name: 'Andi Saputra', car: 'Toyota Avanza (AB 1234 BC)', date: '24 Oct 2023, 14:20', total: 'Rp 1.250.000', method: 'Transfer BCA', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi1.html' },
-            { id: '#TX-90212', initial: 'BW', avatarClass: 'avatar-gray', name: 'Budi Wijaya', car: 'Honda Civic (AB 5678 YZ)', date: '24 Oct 2023, 15:05', total: 'Rp 4.500.000', method: 'Transfer Mandiri', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi2.html' },
-            { id: '#TX-90213', initial: 'CH', avatarClass: 'avatar-teal', name: 'Citra Halim', car: 'Mitsubishi Pajero (AB 3499 SS)', date: '24 Oct 2023, 16:45', total: 'Rp 1.225.000', method: 'Transfer BRI', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi3.html' },
+            { id: '#TX-90211', initial: 'AS', avatarClass: 'avatar-blue', name: 'Andi Saputra', car: 'Toyota Avanza (AB 1234 BC)', date: '20 Jun 2026, 14:20', total: 'Rp 1.250.000', method: 'Transfer BCA', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi1.html' },
+            { id: '#TX-90212', initial: 'BW', avatarClass: 'avatar-gray', name: 'Budi Wijaya', car: 'Honda Civic (AB 5678 YZ)', date: '24 Jul 2023, 15:05', total: 'Rp 4.500.000', method: 'Transfer Mandiri', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi2.html' },
+            { id: '#TX-90213', initial: 'CH', avatarClass: 'avatar-teal', name: 'Citra Halim', car: 'Mitsubishi Pajero (AB 3499 SS)', date: '29 Jul 2026, 16:45', total: 'Rp 1.225.000', method: 'Transfer BRI', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi3.html' },
         ];
 
         // Mapping kategori ke metode pembayaran

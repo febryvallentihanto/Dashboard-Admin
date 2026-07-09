@@ -181,7 +181,7 @@
 
         .search-bar {
             width: 100%;
-            max-width: 800px;
+            max-width: 100%;
             position: relative;
         }
 
@@ -557,6 +557,10 @@
             .total-amount {
                 font-size: 2rem;
             }
+
+            .search-input {
+                font-size: 0.9rem;
+            }
         }
 
         /* --- Gaya Khusus Cetak (Print Styles) --- */
@@ -611,6 +615,11 @@
                 }
 
         @media (max-width: 380px) {
+            .top-header {
+                padding: 10px;
+                gap: 8px;
+            }
+
             .search-input {
                 font-size: 0.8rem;
                 padding: 8px 10px 8px 32px;
@@ -618,6 +627,14 @@
             .search-bar i {
                 left: 10px;
                 font-size: 0.8rem;
+            }
+
+            .content-padding {
+                padding: 12px 8px;
+            }
+
+            .detail-card {
+                border-radius: 6px;
             }
         }
     </style>
@@ -673,7 +690,7 @@
                         alt="Budi Santoso" class="user-avatar">
                     <div class="user-details">
                         <h6>Budi Santoso</h6>
-                        <p style="text-transform: capitalize; font-weight: normal;">Super Admin</p>
+                        <p>Super Admin</p>
                     </div>
                 </div>
 <button type="button" class="btn-logout" title="Logout"

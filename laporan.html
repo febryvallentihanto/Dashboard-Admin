@@ -180,7 +180,7 @@
 
         .search-bar {
             width: 100%;
-            max-width: 800px;
+            max-width: 100%;
             position: relative;
         }
 
@@ -915,7 +915,7 @@
                             <div class="chart-header">
                                 <div>
                                     <h5 class="chart-title">Pertumbuhan Pendapatan</h5>
-                                    <p class="chart-subtitle" id="revenueChartSubtitle">Trend bulanan tahun 2023</p>
+                                    <p class="chart-subtitle" id="revenueChartSubtitle">Trend harian, bulanan, tahunan</p>
                                 </div>
                                 <div class="d-flex align-items-center gap-2">
                                     <!-- Elemen Filter Periode Data -->
@@ -939,8 +939,8 @@
                         <div class="custom-card">
                             <div class="chart-header pb-2">
                                 <div>
-                                    <h5 class="chart-title">Distribusi Servis</h5>
-                                    <p class="chart-subtitle">Berdasarkan kategori pengerjaan</p>
+                                    <h5 class="chart-title">Grafik Layanan</h5>
+                                    <p class="chart-subtitle">Paket layanan yang sering dipilih</p>
                                 </div>
                             </div>
 
@@ -949,8 +949,8 @@
                                 <canvas id="serviceDistributionChart"></canvas>
                                 <!-- Tipografi Absolut di Tengah Donat -->
                                 <div class="doughnut-inner-text">
-                                    <div class="doughnut-inner-val">72%</div>
-                                    <div class="doughnut-inner-label">Rutin</div>
+                                    <div class="doughnut-inner-val">55%</div>
+                                    <div class="doughnut-inner-label">Ringan</div>
                                 </div>
                             </div>
 
@@ -958,23 +958,24 @@
                             <div class="custom-legend">
                                 <div class="legend-item">
                                     <div class="legend-label">
-                                        <span class="legend-dot" style="background-color: #1a73e8;"></span> Servis
-                                        Berkala
+                                        <span class="legend-dot" style="background-color: #20c997;"></span> Paket
+                                        Ringan
                                     </div>
-                                    <div class="legend-val">72%</div>
+                                    <div class="legend-val">55%</div>
                                 </div>
                                 <div class="legend-item">
                                     <div class="legend-label">
-                                        <span class="legend-dot" style="background-color: #008080;"></span> Perbaikan
-                                        Mesin
+                                        <span class="legend-dot" style="background-color: #1a73e8;"></span> Paket
+                                        Sedang
                                     </div>
-                                    <div class="legend-val">18%</div>
+                                    <div class="legend-val">30%</div>
                                 </div>
                                 <div class="legend-item">
                                     <div class="legend-label">
-                                        <span class="legend-dot" style="background-color: #e9ecef;"></span> Body & Cat
+                                        <span class="legend-dot" style="background-color: #dc3545;"></span> Paket
+                                        Berat
                                     </div>
-                                    <div class="legend-val">10%</div>
+                                    <div class="legend-val">15%</div>
                                 </div>
                             </div>
 
@@ -1133,13 +1134,13 @@
             new Chart(ctxDistribution, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Servis Berkala', 'Perbaikan Mesin', 'Body & Cat'],
+                    labels: ['Paket Ringan', 'Paket Sedang', 'Paket Berat'],
                     datasets: [{
-                        data: [72, 18, 10], // Representasi dataset parametrik
+                        data: [55, 30, 15],
                         backgroundColor: [
-                            '#1a73e8', // Biru
-                            '#008080', // Teal/Hijau Tosca Gelap
-                            '#e9ecef'  // Abu-abu terang
+                            '#20c997',
+                            '#1a73e8',
+                            '#dc3545'
                         ],
                         borderWidth: 0,
                         hoverOffset: 4

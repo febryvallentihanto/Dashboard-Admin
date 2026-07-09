@@ -144,6 +144,20 @@
             color: #6c757d;
         }
 
+        .btn-logout {
+            color: #6c757d;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            background: transparent;
+        }
+        .btn-logout:hover {
+            color: #dc3545;
+            background-color: #fce8e6;
+        }
+
         /* --- Area Konten Utama --- */
         .main-content {
             margin-left: 260px;
@@ -252,6 +266,24 @@
         .btn-control:hover {
             background-color: #f8f9fa;
             border-color: #dee2e6;
+        }
+
+        .btn-export {
+            background-color: #0047a5;
+            border: none;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-export:hover {
+            background-color: #003680;
         }
 
         /* --- Desain Tabel Pembayaran --- */
@@ -384,31 +416,55 @@
             color: #ea4335;
         }
 
-        /* Tombol Aksi */
-        .action-icon-btn {
+        /* Tombol Aksi (Detail, Edit, Hapus) */
+        .action-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 6px 12px;
+            border-radius: 20px;
+            border: 1px solid;
             background: transparent;
-            border: none;
-            color: #6c757d;
-            font-size: 1.1rem;
-            padding: 4px 8px;
-            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
             transition: all 0.2s;
             cursor: pointer;
         }
 
-        .action-icon-btn:hover {
+        .btn-action i {
+            font-size: 0.85rem;
+        }
+
+        .btn-detail {
             color: #1a73e8;
+            border-color: #a8c1f8;
+        }
+
+        .btn-detail:hover {
+            background-color: #e8f0fe;
+        }
+
+        .btn-edit {
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+
+        .btn-edit:hover {
             background-color: #f8f9fa;
         }
 
-        .action-icon-btn.btn-delete:hover {
+        .btn-delete {
             color: #dc3545;
-            background-color: #f8d7da;
+            border-color: #f1aeb5;
         }
 
-        .action-icon-btn.btn-edit:hover {
-            color: #1a73e8;
-            background-color: #e8f0fe;
+        .btn-delete:hover {
+            background-color: #f8d7da;
         }
 
         /* --- Footer Tabel & Pagination --- */
@@ -642,9 +698,8 @@
                 font-size: 0.65rem;
             }
 
-            .action-icon-btn {
-                font-size: 1rem;
-                padding: 3px 6px;
+            .btn-action {
+                padding: 6px 10px;
             }
 
             /* Penyesuaian Modal */
@@ -714,9 +769,15 @@
                 font-size: 0.6rem;
             }
 
-            .action-icon-btn {
-                font-size: 0.9rem;
-                padding: 2px 5px;
+            .action-buttons {
+                gap: 4px;
+            }
+            .btn-action {
+                padding: 4px 8px;
+                font-size: 0.65rem;
+            }
+            .btn-action i {
+                font-size: 0.75rem;
             }
 
             .pagination-info {
@@ -870,7 +931,7 @@
                         <p>Super Admin</p>
                     </div>
                 </div>
-                <a href="login.html" class="btn text-secondary border-0 p-0">
+                <a href="login.html" class="btn-logout" title="Logout">
                     <i class="bi bi-box-arrow-right"></i>
                 </a>
             </div>
@@ -921,8 +982,8 @@
                             </div>
                         </div>
 
-                        <button class="btn-control" onclick="exportData()">
-                            <i class="bi bi-file-earmark-pdf text-danger"></i> Export PDF
+                        <button class="btn-export" onclick="exportData()">
+                            <i class="bi bi-file-earmark-pdf"></i> Export PDF
                         </button>
                     </div>
 
@@ -1240,10 +1301,11 @@
                         <td>${item.method}</td>
                         <td><span class="status-badge ${badgeClass}">${item.statusLabel}</span></td>
                         <td>
-                            <!-- URL juga ditambahkan pada action-icon-btn agar tombol Detail dapat berfungsi lagi -->
-                            <button class="action-icon-btn" onclick="window.location.href='${item.url}'" title="Detail"><i class="bi bi-eye"></i></button>
-                            <button class="action-icon-btn btn-edit" onclick="openEditModal('${item.id}')" title="Edit"><i class="bi bi-pencil"></i></button>
-                            <button class="action-icon-btn btn-delete" onclick="showDeleteModal('${item.id}')" title="Hapus"><i class="bi bi-trash"></i></button>
+                            <div class="action-buttons">
+                                <button class="btn-action btn-detail" onclick="window.location.href='${item.url}'" title="Detail"><i class="bi bi-eye"></i></button>
+                                <button class="btn-action btn-edit" onclick="openEditModal('${item.id}')" title="Edit"><i class="bi bi-pencil"></i></button>
+                                <button class="btn-action btn-delete" onclick="showDeleteModal('${item.id}')" title="Hapus"><i class="bi bi-trash"></i></button>
+                            </div>
                         </td>
                     </tr>`;
                 });

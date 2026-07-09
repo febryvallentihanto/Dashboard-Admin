@@ -178,6 +178,16 @@
             const emailInput = document.getElementById('emailInput');
             const formAlert = document.getElementById('formAlert');
 
+            // --- Submit via Enter Key ---
+            function handleEnterKey(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    loginForm.dispatchEvent(new Event('submit'));
+                }
+            }
+            emailInput.addEventListener('keydown', handleEnterKey);
+            passwordInput.addEventListener('keydown', handleEnterKey);
+
             // --- Logika Interaktivitas Visibilitas Kata Sandi ---
             togglePasswordBtn.addEventListener('click', function () {
                 const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';

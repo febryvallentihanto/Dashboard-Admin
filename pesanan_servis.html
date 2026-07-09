@@ -144,6 +144,20 @@
             color: #6c757d;
         }
 
+        .btn-logout {
+            color: #6c757d;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            background: transparent;
+        }
+        .btn-logout:hover {
+            color: #dc3545;
+            background-color: #fce8e6;
+        }
+
         /* --- Area Konten Utama --- */
         .main-content {
             margin-left: 260px;
@@ -160,8 +174,6 @@
             border-bottom: 1px solid #eef0f5;
             display: flex;
             align-items: center;
-            gap: 15px;
-            /* Menambahkan gap untuk tombol toggle dan input pencarian */
         }
 
         .search-bar {
@@ -227,7 +239,6 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 15px;
             border-bottom: 1px solid #eef0f5;
         }
 
@@ -416,7 +427,6 @@
             border-bottom-left-radius: 12px;
             border-bottom-right-radius: 12px;
             flex-wrap: wrap;
-            gap: 15px;
         }
 
         .pagination-info {
@@ -857,7 +867,7 @@
                         <p>Super Admin</p>
                     </div>
                 </div>
-                <a href="login.html" class="btn text-secondary border-0 p-0" title="Logout">
+                <a href="login.html" class="btn-logout" title="Logout">
                     <i class="bi bi-box-arrow-right"></i>
                 </a>
             </div>
@@ -870,12 +880,12 @@
 
             <!-- Header Atas (Pencarian) -->
             <header class="top-header">
-                <button id="sidebarToggle" class="btn btn-link d-lg-none text-dark p-0 border-0">
+                <button id="sidebarToggle" class="btn btn-link d-lg-none me-3 text-dark p-0 border-0">
                     <i class="bi bi-list fs-3"></i>
                 </button>
                 <div class="search-bar">
                     <i class="bi bi-search"></i>
-                    <input type="text" class="search-input" placeholder="Cari kendaraan, pelanggan, atau plat nomor..."
+                    <input type="text" class="search-input" placeholder="Cari kendaraan, pelanggan, atau invoice..."
                         id="searchInput">
                 </div>
             </header>

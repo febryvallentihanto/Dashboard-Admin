@@ -146,12 +146,27 @@
             color: #6c757d;
         }
 
+        .btn-logout {
+            color: #6c757d;
+            padding: 6px 10px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            border: none;
+            background: transparent;
+        }
+        .btn-logout:hover {
+            color: #dc3545;
+            background-color: #fce8e6;
+        }
+
         /* --- Area Konten Utama --- */
         .main-content {
             margin-left: 260px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            transition: margin-left 0.3s ease-in-out;
         }
 
         /* --- Header (Bilah Pencarian) --- */
@@ -375,8 +390,8 @@
 
             .sidebar.show {
                 transform: translateX(0);
-                /* Tampilkan sidebar saat menu ditekan */
-            }
+                box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+                }
 
             .main-content {
                 margin-left: 0;
@@ -388,6 +403,23 @@
 
             .content-padding {
                 padding: 20px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .search-input {
+                font-size: 0.9rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .search-input {
+                font-size: 0.8rem;
+                padding: 8px 10px 8px 32px;
+            }
+            .search-bar i {
+                left: 10px;
+                font-size: 0.8rem;
             }
         }
     </style>
@@ -447,7 +479,7 @@
                     </div>
                 </div>
                 <!-- Mengubah link href menuju halaman login.html untuk fungsi logout -->
-                <a href="login.html" class="text-secondary"><i class="bi bi-box-arrow-right"></i></a>
+                <a href="login.html" class="btn-logout" title="Logout"><i class="bi bi-box-arrow-right"></i></a>
             </div>
         </aside>
 

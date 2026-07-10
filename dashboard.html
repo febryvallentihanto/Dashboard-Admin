@@ -245,26 +245,18 @@
             font-size: 1.2rem;
         }
 
-        .stat-badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            height: fit-content;
-        }
-
         .stat-label {
             font-size: 0.75rem;
             font-weight: 700;
             color: #6c757d;
             letter-spacing: 0.5px;
-            margin-top: 20px;
-            margin-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 16px;
             text-transform: uppercase;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.3rem;
             font-weight: 700;
             margin: 0;
         }
@@ -275,17 +267,7 @@
             color: #20c997;
         }
 
-        .badge-green {
-            background-color: #e6f6eb;
-            color: #20c997;
-        }
-
         .icon-blue {
-            background-color: #e8f0fe;
-            color: #1a73e8;
-        }
-
-        .badge-blue {
             background-color: #e8f0fe;
             color: #1a73e8;
         }
@@ -293,12 +275,6 @@
         .icon-cyan {
             background-color: #e0f7fa;
             color: #00bcd4;
-        }
-
-        .badge-cyan-text {
-            color: #1a73e8;
-            background: transparent;
-            font-size: 0.85rem;
         }
 
         .icon-gray {
@@ -511,56 +487,60 @@
                     <!-- Kartu 1: Pendapatan -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-green">
                                     <i class="bi bi-cash-stack"></i>
                                 </div>
-                                <span class="stat-badge badge-green">+12% &uarr;</span>
+                                <div>
+                                    <p class="stat-label">Pendapatan</p>
+                                    <h3 class="stat-value">Rp 1.200.000</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Pendapatan</p>
-                            <h3 class="stat-value">Rp 2.500.000</h3>
                         </div>
                     </div>
 
                     <!-- Kartu 2: Total Pesanan -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-blue">
                                     <i class="bi bi-calendar2-check"></i>
                                 </div>
-                                <span class="stat-badge badge-green">+8% &uarr;</span>
+                                <div>
+                                    <p class="stat-label">Total Pesanan</p>
+                                    <h3 class="stat-value">6</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Total Pesanan</p>
-                            <h3 class="stat-value">10</h3>
                         </div>
                     </div>
 
                     <!-- Kartu 3: Kendaraan Dikerjakan -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-cyan">
                                     <i class="bi bi-person-workspace"></i>
                                 </div>
-                                <span class="stat-badge badge-cyan-text fw-bold">Aktif</span>
+                                <div>
+                                    <p class="stat-label">Kendaraan Dikerjakan</p>
+                                    <h3 class="stat-value">3</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Kendaraan Dikerjakan</p>
-                            <h3 class="stat-value">5</h3>
                         </div>
                     </div>
 
                     <!-- Kartu 4: Servis Selesai -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-gray">
                                     <i class="bi bi-check-circle"></i>
                                 </div>
-                                <span class="stat-badge badge-green text-success bg-transparent px-0">92% Target</span>
+                                <div>
+                                    <p class="stat-label">Servis Selesai</p>
+                                    <h3 class="stat-value">1</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Servis Selesai</p>
-                            <h3 class="stat-value">2</h3>
                         </div>
                     </div>
                 </div>
@@ -694,18 +674,18 @@
             const chartData = {
                 harian: {
                     labels: ['Sen', 'Sel', 'Rab', 'Kam', 'Jum', 'Sab', 'Min'],
-                    servis: [12, 19, 15, 25, 22, 30, 28],
-                    sparepart: [8, 15, 10, 20, 18, 25, 20]
+                    servis: [3, 5, 4, 7, 6, 8, 5],
+                    sparepart: [2, 3, 2, 5, 4, 5, 3]
                 },
                 bulanan: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
-                    servis: [20, 30, 25, 45, 75, 70, 65, 85],
-                    sparepart: [15, 20, 35, 30, 50, 45, 60, 55]
+                    servis: [8, 12, 10, 18, 25, 22, 20, 28],
+                    sparepart: [5, 8, 7, 12, 15, 14, 12, 18]
                 },
                 tahunan: {
                     labels: ['2020', '2021', '2022', '2023', '2024'],
-                    servis: [150, 200, 250, 300, 450],
-                    sparepart: [100, 150, 180, 220, 350]
+                    servis: [60, 80, 95, 120, 150],
+                    sparepart: [40, 55, 65, 85, 110]
                 }
             };
 

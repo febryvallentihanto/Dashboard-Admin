@@ -231,7 +231,7 @@
         .page-subtitle {
             color: #6c757d;
             font-size: 0.95rem;
-            margin-bottom: 0;
+            margin-bottom: 24px;
         }
 
         /* --- Desain Kartu Statistik --- */
@@ -256,26 +256,18 @@
             font-size: 1.2rem;
         }
 
-        .stat-badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 4px 10px;
-            border-radius: 20px;
-            height: fit-content;
-        }
-
         .stat-label {
             font-size: 0.75rem;
             font-weight: 700;
             color: #6c757d;
             letter-spacing: 0.5px;
-            margin-top: 20px;
-            margin-bottom: 8px;
+            margin-top: 0;
+            margin-bottom: 16px;
             text-transform: uppercase;
         }
 
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.2rem;
             font-weight: 700;
             margin: 0;
         }
@@ -286,17 +278,7 @@
             color: #20c997;
         }
 
-        .badge-green {
-            background-color: #e6f6eb;
-            color: #20c997;
-        }
-
         .icon-blue {
-            background-color: #e8f0fe;
-            color: #1a73e8;
-        }
-
-        .badge-blue {
             background-color: #e8f0fe;
             color: #1a73e8;
         }
@@ -304,12 +286,6 @@
         .icon-cyan {
             background-color: #e0f7fa;
             color: #00bcd4;
-        }
-
-        .badge-cyan-text {
-            color: #1a73e8;
-            background: transparent;
-            font-size: 0.85rem;
         }
 
         .icon-gray {
@@ -479,11 +455,11 @@
             }
 
             .stat-value {
-                font-size: 1.5rem;
+                font-size: 1.2rem;
             }
 
             .stat-label {
-                margin-top: 16px;
+                margin-top: 0;
                 font-size: 0.7rem;
             }
 
@@ -491,11 +467,6 @@
                 width: 40px;
                 height: 40px;
                 font-size: 1.1rem;
-            }
-
-            .stat-badge {
-                font-size: 0.7rem;
-                padding: 3px 8px;
             }
 
             .chart-header {
@@ -571,6 +542,7 @@
 
             .page-subtitle {
                 font-size: 0.85rem;
+                margin-bottom: 16px;
             }
 
             .header-action-container {
@@ -589,18 +561,13 @@
             }
 
             .stat-value {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
 
             .stat-label {
-                margin-top: 14px;
+                margin-top: 0;
                 margin-bottom: 6px;
                 font-size: 0.65rem;
-            }
-
-            .stat-badge {
-                font-size: 0.65rem;
-                padding: 2px 7px;
             }
 
             .chart-title {
@@ -654,6 +621,7 @@
 
             .page-subtitle {
                 font-size: 0.8rem;
+                margin-bottom: 12px;
             }
 
             .custom-card {
@@ -853,56 +821,60 @@
                     <!-- Kartu 1: Pendapatan -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-green">
                                     <i class="bi bi-cash-stack"></i>
                                 </div>
-                                <span class="stat-badge badge-green">+12% &uarr;</span>
+                                <div>
+                                    <p class="stat-label">Pendapatan</p>
+                                    <h3 class="stat-value">Rp 1.200.000</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Pendapatan</p>
-                            <h3 class="stat-value">Rp 2.500.000</h3>
                         </div>
                     </div>
 
                     <!-- Kartu 2: Total Pesanan -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-blue">
                                     <i class="bi bi-calendar2-check"></i>
                                 </div>
-                                <span class="stat-badge badge-green">+8% &uarr;</span>
+                                <div>
+                                    <p class="stat-label">Total Pesanan</p>
+                                    <h3 class="stat-value">6</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Total Pesanan</p>
-                            <h3 class="stat-value">10</h3>
                         </div>
                     </div>
 
                     <!-- Kartu 3: Kendaraan Dikerjakan -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-cyan">
                                     <i class="bi bi-person-workspace"></i>
                                 </div>
-                                <span class="stat-badge badge-cyan-text fw-bold">Aktif</span>
+                                <div>
+                                    <p class="stat-label">Kendaraan Dikerjakan</p>
+                                    <h3 class="stat-value">3</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Kendaraan Dikerjakan</p>
-                            <h3 class="stat-value">5</h3>
                         </div>
                     </div>
 
                     <!-- Kartu 4: Servis Selesai -->
                     <div class="col-md-6 col-xl-3">
                         <div class="custom-card">
-                            <div class="d-flex justify-content-between align-items-start">
+                            <div class="d-flex align-items-center gap-3">
                                 <div class="stat-icon-wrapper icon-gray">
                                     <i class="bi bi-check-circle"></i>
                                 </div>
-                                <span class="stat-badge badge-green text-success bg-transparent px-0">92% Target</span>
+                                <div>
+                                    <p class="stat-label">Servis Selesai</p>
+                                    <h3 class="stat-value">1</h3>
+                                </div>
                             </div>
-                            <p class="stat-label">Servis Selesai</p>
-                            <h3 class="stat-value">2</h3>
                         </div>
                     </div>
                 </div>
@@ -1031,17 +1003,17 @@
             const revenueDataConfig = {
                 harian: {
                     labels: ['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'],
-                    data: [1.2, 2.5, 1.8, 3.2, 4.5, 5.8, 4.2],
+                    data: [0.5, 1.2, 0.8, 1.5, 2.0, 2.5, 1.8],
                     subtitle: 'Trend harian minggu ini'
                 },
                 bulanan: {
                     labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu'],
-                    data: [15, 22, 20, 35, 55, 62, 45, 48],
+                    data: [8, 12, 10, 18, 25, 22, 20, 28],
                     subtitle: 'Trend bulanan tahun 2023'
                 },
                 tahunan: {
                     labels: ['2019', '2020', '2021', '2022', '2023'],
-                    data: [120, 150, 180, 250, 340],
+                    data: [60, 85, 110, 140, 180],
                     subtitle: 'Trend tahunan (5 tahun terakhir)'
                 }
             };
@@ -1136,7 +1108,7 @@
                 data: {
                     labels: ['Paket Ringan', 'Paket Sedang', 'Paket Berat'],
                     datasets: [{
-                        data: [55, 30, 15],
+                        data: [45, 35, 20],
                         backgroundColor: [
                             '#20c997',
                             '#1a73e8',

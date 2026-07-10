@@ -242,6 +242,71 @@
             border-bottom: 1px solid #eef0f5;
         }
 
+        .filter-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: auto;
+        }
+
+        .btn-tambah {
+            background-color: #20c997;
+            border: none;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-tambah:hover {
+            background-color: #17a67b;
+        }
+
+        .btn-export {
+            background-color: #0047a5;
+            border: none;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-export:hover {
+            background-color: #003680;
+        }
+
+        .btn-control {
+            border: 1px solid #e9ecef;
+            background-color: #ffffff;
+            color: #333333;
+            font-weight: 500;
+            font-size: 0.9rem;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .btn-control:hover {
+            background-color: #f8f9fa;
+            border-color: #dee2e6;
+        }
+
         /* --- Desain Tabel Khusus --- */
         .table-custom {
             margin-bottom: 0;
@@ -254,22 +319,20 @@
             font-weight: 700;
             color: #6c757d;
             font-size: 0.85rem;
-            text-transform: uppercase;
-            padding: 20px 24px;
+            padding: 16px 24px;
             border-bottom: 1px solid #eef0f5;
             border-top: none;
             background-color: #fcfdfd;
             white-space: nowrap;
-            /* Mencegah header tabel terpotong */
         }
 
         .table-custom td {
             vertical-align: middle;
-            padding: 20px 24px;
+            padding: 16px 24px;
             border-bottom: 1px solid #eef0f5;
             color: #333333;
+            font-size: 0.9rem;
             white-space: nowrap;
-            /* Mencegah isi sel tabel berantakan di layar kecil */
         }
 
         .table-custom tr:last-child td {
@@ -902,9 +965,8 @@
 
                         <!-- Dropdown Filter -->
                         <div class="dropdown">
-                            <button class="btn bg-white border d-flex align-items-center gap-2 dropdown-toggle"
-                                type="button" id="statusFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false"
-                                style="border-radius: 8px; font-size: 0.9rem; font-weight: 500; color: #333; padding: 8px 16px; border-color: #e9ecef !important;">
+                            <button class="btn-control dropdown-toggle"
+                                type="button" id="statusFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                                 <i class="bi bi-filter"></i> <span id="currentFilterText">Semua Status</span>
                             </button>
                             <ul class="dropdown-menu shadow-sm border-0 w-100" aria-labelledby="statusFilterDropdown">
@@ -916,11 +978,20 @@
                                         data-filter="pemeriksaan">Pemeriksaan</a></li>
                                 <li><a class="dropdown-item filter-option" href="#"
                                         data-filter="dikerjakan">Dikerjakan</a></li>
-                                <li><a class="dropdown-item filter-option" href="#" data-filter="selesai">Selesai</a>
-                                </li>
-                            </ul>
+                                    <li><a class="dropdown-item filter-option" href="#" data-filter="selesai">Selesai</a>
+                                    </li>
+                                </ul>
+                            </div>
+
+                            <div class="filter-right">
+                                <button class="btn-tambah" onclick="openAddModal()">
+                                    <i class="bi bi-plus-circle"></i> Tambah
+                                </button>
+                                <button class="btn-export" onclick="exportData()">
+                                    <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                                </button>
+                            </div>
                         </div>
-                    </div>
 
                     <!-- Area Tabel -->
                     <!-- KELAS table-responsive MENJAMIN TABEL BISA DI-SCROLL KE KANAN-KIRI DI MOBILE -->
@@ -928,8 +999,10 @@
                         <table class="table-custom">
                             <thead>
                                 <tr>
-                                    <th>Pelanggan</th>
+                                    <th>ID</th>
+                                    <th>Nama</th>
                                     <th>Kendaraan</th>
+                                    <th>Plat Nomor</th>
                                     <th>Paket Servis</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
@@ -960,61 +1033,63 @@
 
     <!-- Modal Detail -->
     <div class="modal fade" id="modalDetail" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content border-0 shadow-sm">
                 <div class="modal-header border-bottom-0 pb-0">
                     <h5 class="modal-title fw-bold" id="modalDetailLabel">Detail Pesanan Servis</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <table class="table table-borderless mb-0">
-                        <tbody>
-                            <tr>
-                                <th class="ps-0 text-muted w-50">Nama</th>
-                                <td class="fw-semibold" id="detailNama"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">No Whatsapp</th>
-                                <td class="fw-semibold" id="detailWhatsapp"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Email</th>
-                                <td class="fw-semibold" id="detailEmail"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Plat Nomor</th>
-                                <td class="fw-semibold" id="detailPlat"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Merk</th>
-                                <td class="fw-semibold" id="detailMerk"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Model</th>
-                                <td class="fw-semibold" id="detailModel"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Tahun</th>
-                                <td class="fw-semibold" id="detailTahun"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Tanggal Servis</th>
-                                <td class="fw-semibold" id="detailTanggalServis"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Tanggal Kedatangan</th>
-                                <td class="fw-semibold" id="detailTanggalKedatangan"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Jam Kedatangan</th>
-                                <td class="fw-semibold" id="detailJamKedatangan"></td>
-                            </tr>
-                            <tr>
-                                <th class="ps-0 text-muted">Keluhan</th>
-                                <td class="fw-semibold" id="detailKeluhan"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Nama</small>
+                                <span class="fw-semibold" id="detailNama"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">No Whatsapp</small>
+                                <span class="fw-semibold" id="detailWhatsapp"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Email</small>
+                                <span class="fw-semibold" id="detailEmail"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Plat Nomor</small>
+                                <span class="fw-semibold" id="detailPlat"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Merk</small>
+                                <span class="fw-semibold" id="detailMerk"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Model</small>
+                                <span class="fw-semibold" id="detailModel"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Tahun</small>
+                                <span class="fw-semibold" id="detailTahun"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Tanggal Servis</small>
+                                <span class="fw-semibold" id="detailTanggalServis"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Tanggal Kedatangan</small>
+                                <span class="fw-semibold" id="detailTanggalKedatangan"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Jam Kedatangan</small>
+                                <span class="fw-semibold" id="detailJamKedatangan"></span>
+                            </div>
+                            <div class="mb-2">
+                                <small class="text-muted d-block">Keluhan</small>
+                                <span class="fw-semibold" id="detailKeluhan"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="modal-footer border-top-0 pt-0">
                     <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Tutup</button>
@@ -1041,15 +1116,18 @@
                         <div class="mb-3">
                             <label class="form-label fw-semibold text-muted small">Nama Pelanggan</label>
                             <input type="text" class="form-control" id="editNama">
+                            <div class="invalid-feedback">Nama pelanggan tidak boleh kosong</div>
                         </div>
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold text-muted small">Kendaraan</label>
                                 <input type="text" class="form-control" id="editKendaraan">
+                                <div class="invalid-feedback">Kendaraan tidak boleh kosong</div>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label fw-semibold text-muted small">Plat Nomor</label>
                                 <input type="text" class="form-control" id="editPlat">
+                                <div class="invalid-feedback">Plat nomor tidak boleh kosong</div>
                             </div>
                         </div>
                         <div class="mb-3">
@@ -1100,6 +1178,83 @@
         </div>
     </div>
 
+    <!-- Modal Tambah Data Pesanan -->
+    <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow-sm">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold">Tambah Pesanan Servis</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formTambah">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Nama Pelanggan</label>
+                                <input type="text" class="form-control" id="tambahNama">
+                                <div class="invalid-feedback">Nama pelanggan tidak boleh kosong</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">No. WhatsApp</label>
+                                <input type="text" class="form-control" id="tambahWhatsapp" placeholder="081234567890">
+                                <div class="invalid-feedback">No. WhatsApp tidak boleh kosong</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Kendaraan</label>
+                                <input type="text" class="form-control" id="tambahKendaraan" placeholder="Contoh: Honda HR-V">
+                                <div class="invalid-feedback">Kendaraan tidak boleh kosong</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Plat Nomor</label>
+                                <input type="text" class="form-control" id="tambahPlat" placeholder="B 1234 ABC">
+                                <div class="invalid-feedback">Plat nomor tidak boleh kosong</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Tahun</label>
+                                <input type="text" class="form-control" id="tambahTahun" placeholder="2020">
+                                <div class="invalid-feedback">Tahun tidak boleh kosong</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Tanggal Servis</label>
+                                <input type="date" class="form-control" id="tambahTanggal">
+                                <div class="invalid-feedback">Tanggal servis tidak boleh kosong</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Jam Kedatangan</label>
+                                <input type="time" class="form-control" id="tambahJam">
+                                <div class="invalid-feedback">Jam kedatangan tidak boleh kosong</div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Paket Servis</label>
+                                <select class="form-select" id="tambahPaket">
+                                    <option value="">Pilih Paket</option>
+                                    <option value="Servis Ringan">Servis Ringan</option>
+                                    <option value="Servis Sedang">Servis Sedang</option>
+                                    <option value="Servis Berat">Servis Berat</option>
+                                </select>
+                                <div class="invalid-feedback">Pilih paket servis</div>
+                            </div>
+                            <div class="col-md-8 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Keluhan</label>
+                                <textarea class="form-control" id="tambahKeluhan" rows="2" placeholder="Opsional"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success rounded-3 px-4" id="btnConfirmAdd">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060; margin-top: 20px;">
         <div id="liveToast" class="toast align-items-center text-white bg-success border-0 shadow-lg" role="alert"
@@ -1116,6 +1271,10 @@
 
     <!-- Pustaka Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Pustaka jsPDF & AutoTable untuk fungsionalitas Export PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 
     <script>
         // --- 1. Data Dummy Diperbarui ---
@@ -1159,21 +1318,17 @@
             const currentData = filteredData.slice(startIndex, endIndex);
 
             if (currentData.length === 0) {
-                tableBody.innerHTML = `<tr><td colspan="5" class="text-center py-4 text-muted">Tidak ada data ditemukan.</td></tr>`;
+                tableBody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Tidak ada data ditemukan.</td></tr>`;
             } else {
                 currentData.forEach(item => {
                     const statusData = statusConfig[item.status];
 
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
-                        <td>
-                            <span class="fw-semibold-custom">${item.nama}</span>
-                            <span class="text-muted-custom">${item.id}</span>
-                        </td>
-                        <td>
-                            <span class="d-block">${item.kendaraan}</span>
-                            <span class="badge-plate">${item.plat}</span>
-                        </td>
+                        <td><span class="text-muted-custom">${item.id}</span></td>
+                        <td><span class="fw-semibold-custom">${item.nama}</span></td>
+                        <td>${item.kendaraan}</td>
+                        <td><span class="badge-plate">${item.plat}</span></td>
                         <td>${item.paket}</td>
                         <td>
                             <span class="status-badge ${statusData.class}">${statusData.label}</span>
@@ -1261,6 +1416,8 @@
                 sidebar.classList.remove('show');
                 overlay.classList.remove('show');
             });
+
+            document.getElementById('btnConfirmAdd').addEventListener('click', saveAdd);
         }
 
         function applyFilters(searchTerm, filterStatus) {
@@ -1300,6 +1457,7 @@
         }
 
         function openEditModal(id) {
+            document.querySelectorAll('#formEdit .is-invalid').forEach(el => el.classList.remove('is-invalid'));
             const item = rawData.find(d => d.id === id);
             if (item) {
                 currentEditId = item.id;
@@ -1314,12 +1472,19 @@
         }
 
         function saveEdit() {
+            const fields = [
+                { id: 'editNama', validator: validateNamaPesanan },
+                { id: 'editKendaraan', validator: validateKendaraanPesanan },
+                { id: 'editPlat', validator: validatePlat },
+            ];
+            if (!validateFormPesanan('formEdit', fields)) return;
+
             const id = currentEditId;
             const index = rawData.findIndex(d => d.id === id);
             if (index !== -1) {
-                rawData[index].nama = document.getElementById('editNama').value;
-                rawData[index].kendaraan = document.getElementById('editKendaraan').value;
-                rawData[index].plat = document.getElementById('editPlat').value;
+                rawData[index].nama = document.getElementById('editNama').value.trim();
+                rawData[index].kendaraan = document.getElementById('editKendaraan').value.trim();
+                rawData[index].plat = document.getElementById('editPlat').value.trim().toUpperCase();
                 rawData[index].paket = document.getElementById('editPaket').value;
 
                 applyFilters(document.getElementById('searchInput').value.toLowerCase(), activeFilter);
@@ -1353,7 +1518,170 @@
             }
         }
 
-        // --- 6. Notifikasi Toast ---
+        // --- 6. Fungsi Validasi ---
+        function validateNamaPesanan(value) {
+            if (!value) return 'Nama pelanggan tidak boleh kosong';
+            if (value.length < 3) return 'Nama pelanggan minimal 3 karakter';
+            if (!/^[a-zA-Z\s.]+$/.test(value)) return 'Nama hanya boleh mengandung huruf, spasi, dan titik';
+            return '';
+        }
+
+        function validateWhatsapp(value) {
+            if (!value) return 'No. WhatsApp tidak boleh kosong';
+            if (!/^0\d{9,14}$/.test(value)) return 'Format WhatsApp: diawali 0, 10-15 digit (contoh: 081234567890)';
+            return '';
+        }
+
+        function validateKendaraanPesanan(value) {
+            if (!value) return 'Kendaraan tidak boleh kosong';
+            if (value.length < 2) return 'Kendaraan minimal 2 karakter';
+            return '';
+        }
+
+        function validatePlat(value) {
+            if (!value) return 'Plat nomor tidak boleh kosong';
+            if (!/^[A-Za-z]{1,2}\s?\d{1,4}\s?[A-Za-z]{1,3}$/.test(value.trim())) return 'Format plat tidak valid (contoh: B 1234 ABC)';
+            return '';
+        }
+
+        function validateTahun(value) {
+            if (!value) return 'Tahun tidak boleh kosong';
+            if (!/^\d{4}$/.test(value)) return 'Tahun harus 4 digit angka';
+            const year = parseInt(value);
+            if (year < 1990 || year > 2026) return 'Tahun harus antara 1990 - 2026';
+            return '';
+        }
+
+        function validateFormPesanan(formId, fields) {
+            let valid = true;
+            fields.forEach(f => {
+                const el = document.getElementById(f.id);
+                const feedback = el.parentElement.querySelector('.invalid-feedback');
+                el.classList.remove('is-invalid');
+                const msg = f.validator(el.value.trim());
+                if (msg) {
+                    el.classList.add('is-invalid');
+                    if (feedback) feedback.innerText = msg;
+                    valid = false;
+                }
+            });
+            return valid;
+        }
+
+        // --- 7. Fungsi Tambah Data ---
+        function openAddModal() {
+            document.querySelectorAll('#formTambah .is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.getElementById('tambahNama').value = '';
+            document.getElementById('tambahWhatsapp').value = '';
+            document.getElementById('tambahKendaraan').value = '';
+            document.getElementById('tambahPlat').value = '';
+            document.getElementById('tambahTahun').value = '';
+            document.getElementById('tambahTanggal').value = '';
+            document.getElementById('tambahJam').value = '';
+            document.getElementById('tambahPaket').value = '';
+            document.getElementById('tambahKeluhan').value = '';
+            new bootstrap.Modal(document.getElementById('modalTambah')).show();
+        }
+
+        function saveAdd() {
+            const fields = [
+                { id: 'tambahNama', validator: validateNamaPesanan },
+                { id: 'tambahWhatsapp', validator: validateWhatsapp },
+                { id: 'tambahKendaraan', validator: validateKendaraanPesanan },
+                { id: 'tambahPlat', validator: validatePlat },
+                { id: 'tambahTahun', validator: validateTahun },
+                { id: 'tambahTanggal', validator: v => v ? '' : 'Tanggal servis tidak boleh kosong' },
+                { id: 'tambahJam', validator: v => v ? '' : 'Jam kedatangan tidak boleh kosong' },
+                { id: 'tambahPaket', validator: v => v ? '' : 'Pilih paket servis' },
+            ];
+            if (!validateFormPesanan('formTambah', fields)) return;
+
+            const nama = document.getElementById('tambahNama').value.trim();
+            const whatsapp = document.getElementById('tambahWhatsapp').value.trim();
+            const kendaraan = document.getElementById('tambahKendaraan').value.trim();
+            const plat = document.getElementById('tambahPlat').value.trim().toUpperCase();
+            const tahun = document.getElementById('tambahTahun').value.trim();
+            const tanggal = document.getElementById('tambahTanggal').value;
+            const jam = document.getElementById('tambahJam').value;
+            const paket = document.getElementById('tambahPaket').value;
+            const keluhan = document.getElementById('tambahKeluhan').value.trim() || '-';
+
+            // Generate ID baru
+            const maxId = rawData.reduce((max, item) => {
+                const num = parseInt(item.id.replace('SV-', ''));
+                return num > max ? num : max;
+            }, 100);
+            const newId = 'SV-' + String(maxId + 1).padStart(5, '0');
+
+            // Parse kendaraan untuk merk & model
+            const parts = kendaraan.split(' ');
+            const merk = parts[0] || kendaraan;
+            const model = parts.slice(1).join(' ') || '-';
+
+            rawData.push({
+                id: newId,
+                nama: nama,
+                kendaraan: kendaraan,
+                plat: plat,
+                paket: paket,
+                status: 'menunggu',
+                whatsapp: whatsapp,
+                email: '-',
+                merk: merk,
+                model: model,
+                tahun: tahun,
+                tanggal_servis: tanggal,
+                tanggal_kedatangan: tanggal,
+                jam_kedatangan: jam + ' WIB',
+                keluhan: keluhan
+            });
+
+            bootstrap.Modal.getInstance(document.getElementById('modalTambah')).hide();
+            applyFilters(document.getElementById('searchInput').value.toLowerCase(), activeFilter);
+            showNotification('Pesanan servis berhasil ditambahkan!', 'success');
+        }
+
+        // --- 9. Export PDF ---
+        function exportData() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('landscape');
+
+            doc.setFontSize(16);
+            doc.text("Laporan Pesanan Servis - Gandoz Mobil", 14, 20);
+
+            doc.setFontSize(10);
+            const today = new Date().toLocaleDateString('id-ID');
+            const filterText = document.getElementById('currentFilterText').innerText;
+            doc.text(`Tanggal Cetak: ${today} | Filter Status: ${filterText}`, 14, 28);
+
+            const exportHeaders = [
+                "ID", "Nama", "No. WhatsApp", "Email", "Kendaraan", "Plat Nomor",
+                "Merk", "Model", "Tahun", "Tgl Servis", "Tgl Kedatangan",
+                "Jam Kedatangan", "Paket Servis", "Keluhan", "Status"
+            ];
+
+            const exportRows = filteredData.map(item => {
+                const statusLabel = statusConfig[item.status]?.label || item.status;
+                return [
+                    item.id, item.nama, item.whatsapp, item.email, item.kendaraan, item.plat,
+                    item.merk, item.model, item.tahun, item.tanggal_servis, item.tanggal_kedatangan,
+                    item.jam_kedatangan, item.paket, item.keluhan, statusLabel
+                ];
+            });
+
+            doc.autoTable({
+                head: [exportHeaders],
+                body: exportRows,
+                startY: 35,
+                theme: 'striped',
+                headStyles: { fillColor: [26, 115, 232], fontSize: 7 },
+                styles: { fontSize: 6.5, cellPadding: 2 }
+            });
+
+            doc.save("Laporan_Pesanan_Servis_Gandoz_Mobil.pdf");
+        }
+
+        // --- 10. Notifikasi Toast ---
         function showNotification(message, type) {
             const toastEl = document.getElementById('liveToast');
             const toastMessage = document.getElementById('toastMessage');

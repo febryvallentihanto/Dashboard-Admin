@@ -220,7 +220,7 @@
         .page-subtitle {
             color: #6c757d;
             font-size: 0.95rem;
-            margin-bottom: 32px;
+            margin-bottom: 24px;
         }
 
         /* --- Desain Kartu & Kontrol Atas Tabel --- */
@@ -246,6 +246,13 @@
         .controls-left {
             display: flex;
             gap: 10px;
+        }
+
+        .controls-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-left: auto;
         }
 
         .btn-control {
@@ -280,10 +287,30 @@
             gap: 8px;
             transition: all 0.2s;
             cursor: pointer;
+            font-size: 0.9rem;
         }
 
         .btn-export:hover {
             background-color: #003680;
+        }
+
+        .btn-tambah {
+            background-color: #20c997;
+            border: none;
+            color: #ffffff;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .btn-tambah:hover {
+            background-color: #17a67b;
         }
 
         /* --- Desain Tabel Pembayaran --- */
@@ -982,9 +1009,14 @@
                             </div>
                         </div>
 
-                        <button class="btn-export" onclick="exportData()">
-                            <i class="bi bi-file-earmark-pdf"></i> Export PDF
-                        </button>
+                        <div class="controls-right">
+                            <button class="btn-tambah" onclick="openAddModal()">
+                                <i class="bi bi-plus-circle"></i> Tambah
+                            </button>
+                            <button class="btn-export" onclick="exportData()">
+                                <i class="bi bi-file-earmark-pdf"></i> Export PDF
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Tabel Data -->
@@ -1109,6 +1141,64 @@
         </div>
     </div>
 
+    <!-- Modal Tambah Data Pembayaran -->
+    <div class="modal fade" id="modalTambah" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-bottom-0">
+                    <h5 class="modal-title fw-bold">Tambah Data Pembayaran</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formTambah">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Nama Pelanggan</label>
+                                <input type="text" class="form-control" id="tambahNama">
+                                <div class="invalid-feedback">Nama pelanggan tidak boleh kosong</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Kendaraan</label>
+                                <input type="text" class="form-control" id="tambahKendaraan">
+                                <div class="invalid-feedback">Kendaraan tidak boleh kosong</div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold text-muted small">Total Tagihan</label>
+                            <input type="text" class="form-control" id="tambahTotal">
+                            <div class="invalid-feedback">Total tagihan tidak boleh kosong</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Kategori Pembayaran</label>
+                                <select class="form-select" id="tambahKategori">
+                                    <option value="">Pilih Kategori</option>
+                                    <option value="QRIS">QRIS</option>
+                                    <option value="E-Money">E-Money</option>
+                                    <option value="Virtual Account">Virtual Account</option>
+                                    <option value="Transfer Bank">Transfer Bank</option>
+                                    <option value="Tunai">Tunai</option>
+                                </select>
+                                <div class="invalid-feedback">Pilih kategori pembayaran</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Metode Pembayaran</label>
+                                <select class="form-select" id="tambahMethod">
+                                    <option value="">Pilih Metode</option>
+                                </select>
+                                <div class="invalid-feedback">Pilih metode pembayaran</div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer border-top-0">
+                    <button type="button" class="btn btn-light rounded-3 px-4" data-bs-dismiss="modal">Batal</button>
+                    <button type="button" class="btn btn-success rounded-3 px-4" id="btnConfirmAdd">Simpan</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 1060; margin-top: 20px;">
         <div id="liveToast" class="toast align-items-center text-white bg-success border-0 shadow-lg" role="alert"
@@ -1158,12 +1248,14 @@
         // Instance Modal Bootstrap
         let deleteModalInstance;
         let editModalInstance;
+        let tambahModalInstance;
 
         document.addEventListener("DOMContentLoaded", function () {
 
             // Inisialisasi Modal
             deleteModalInstance = new bootstrap.Modal(document.getElementById('modalDeleteConfirm'));
             editModalInstance = new bootstrap.Modal(document.getElementById('modalEdit'));
+            tambahModalInstance = new bootstrap.Modal(document.getElementById('modalTambah'));
 
             // Logika Navigasi Overlay (Mobile Environment)
             const sidebar = document.querySelector('.sidebar');
@@ -1204,7 +1296,7 @@
                 saveEdit();
             });
 
-            // Event Listener Perubahan Kategori Pembayaran
+            // Event Listener Perubahan Kategori Pembayaran (Edit)
             document.getElementById('editKategori').addEventListener('change', function () {
                 const methodSelect = document.getElementById('editMethod');
                 methodSelect.innerHTML = '<option value="">Pilih Metode</option>';
@@ -1216,6 +1308,25 @@
                         methodSelect.appendChild(opt);
                     });
                 }
+            });
+
+            // Event Listener Perubahan Kategori Pembayaran (Tambah)
+            document.getElementById('tambahKategori').addEventListener('change', function () {
+                const methodSelect = document.getElementById('tambahMethod');
+                methodSelect.innerHTML = '<option value="">Pilih Metode</option>';
+                if (this.value && paymentMethods[this.value]) {
+                    paymentMethods[this.value].forEach(function (m) {
+                        const opt = document.createElement('option');
+                        opt.value = m;
+                        opt.textContent = m;
+                        methodSelect.appendChild(opt);
+                    });
+                }
+            });
+
+            // Event Listener Tombol Konfirmasi Tambah di Modal
+            document.getElementById('btnConfirmAdd').addEventListener('click', function () {
+                saveAdd();
             });
 
             // Event Listener Tombol Konfirmasi Hapus di Modal
@@ -1384,49 +1495,140 @@
             }
         }
 
+        // Fungsi Membuka Modal Tambah
+        function openAddModal() {
+            document.querySelectorAll('#formTambah .is-invalid').forEach(el => el.classList.remove('is-invalid'));
+            document.getElementById('tambahNama').value = '';
+            document.getElementById('tambahKendaraan').value = '';
+            document.getElementById('tambahTotal').value = '';
+            document.getElementById('tambahKategori').value = '';
+            document.getElementById('tambahMethod').innerHTML = '<option value="">Pilih Metode</option>';
+            tambahModalInstance.show();
+        }
+
+        // Fungsi Validasi Nama (hanya huruf, spasi, titik, min 3 karakter)
+        function validateNama(value) {
+            if (!value) return 'Nama pelanggan tidak boleh kosong';
+            if (value.length < 3) return 'Nama pelanggan minimal 3 karakter';
+            if (!/^[a-zA-Z\s.]+$/.test(value)) return 'Nama hanya boleh mengandung huruf, spasi, dan titik';
+            return '';
+        }
+
+        // Fungsi Validasi Kendaraan (min 5 karakter)
+        function validateKendaraan(value) {
+            if (!value) return 'Kendaraan tidak boleh kosong';
+            if (value.length < 5) return 'Kendaraan minimal 5 karakter (contoh: Toyota Avanza)';
+            return '';
+        }
+
+        // Fungsi Validasi Total (Rp 1.000.000 atau angka saja)
+        function validateTotal(value) {
+            if (!value) return 'Total tagihan tidak boleh kosong';
+            if (!/^(Rp\s)?[\d.]+$/.test(value)) return 'Format total: Rp 1.000.000 atau angka saja (contoh: 1250000)';
+            return '';
+        }
+
+        // Fungsi bantu untuk memformat total ke Rp
+        function formatTotal(value) {
+            if (/^Rp\s/i.test(value)) return value;
+            const num = value.replace(/\./g, '');
+            if (/^\d+$/.test(num)) {
+                return 'Rp ' + Number(num).toLocaleString('id-ID');
+            }
+            return value;
+        }
+
+        // Fungsi validasi form generic
+        function validateForm(formId, fields) {
+            let valid = true;
+            fields.forEach(f => {
+                const el = document.getElementById(f.id);
+                const feedback = el.parentElement.querySelector('.invalid-feedback');
+                el.classList.remove('is-invalid');
+                const msg = f.validator(el.value.trim());
+                if (msg) {
+                    el.classList.add('is-invalid');
+                    if (feedback) feedback.innerText = msg;
+                    valid = false;
+                }
+            });
+            return valid;
+        }
+
+        // Fungsi Menyimpan Data Tambah
+        function saveAdd() {
+            const fields = [
+                { id: 'tambahNama', validator: validateNama },
+                { id: 'tambahKendaraan', validator: validateKendaraan },
+                { id: 'tambahTotal', validator: validateTotal },
+                { id: 'tambahKategori', validator: v => v ? '' : 'Pilih kategori pembayaran' },
+                { id: 'tambahMethod', validator: v => v ? '' : 'Pilih metode pembayaran' },
+            ];
+            if (!validateForm('formTambah', fields)) return;
+
+            const nama = document.getElementById('tambahNama').value.trim();
+            const kendaraan = document.getElementById('tambahKendaraan').value.trim();
+            const total = formatTotal(document.getElementById('tambahTotal').value.trim());
+            const method = document.getElementById('tambahMethod').value;
+
+            // Generate ID baru
+            const maxId = allPaymentData.reduce((max, item) => {
+                const num = parseInt(item.id.replace('#TX-', ''));
+                return num > max ? num : max;
+            }, 90210);
+            const newId = '#TX-' + (maxId + 1);
+
+            // Generate inisial dari nama
+            const nameParts = nama.split(' ');
+            const initial = nameParts.map(p => p.charAt(0).toUpperCase()).join('');
+
+            // Tentukan avatarClass secara acak
+            const avatarClasses = ['avatar-blue', 'avatar-gray', 'avatar-teal', 'avatar-indigo', 'avatar-orange', 'avatar-purple'];
+            const avatarClass = avatarClasses[Math.floor(Math.random() * avatarClasses.length)];
+
+            // Format tanggal sekarang
+            const now = new Date();
+            const months = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Agu', 'Sep', 'Okt', 'Nov', 'Des'];
+            const dateStr = now.getDate() + ' ' + months[now.getMonth()] + ' ' + now.getFullYear() + ', ' +
+                now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+
+            allPaymentData.push({
+                id: newId,
+                initial: initial,
+                avatarClass: avatarClass,
+                name: nama,
+                car: kendaraan,
+                date: dateStr,
+                total: total,
+                method: method,
+                status: 'belum',
+                statusLabel: 'Belum Bayar',
+                url: 'detail_transaksi1.html'
+            });
+
+            tambahModalInstance.hide();
+            renderTable();
+            showNotification('Data pembayaran berhasil ditambahkan!', 'success');
+        }
+
         // Fungsi Menyimpan Data Edit
         function saveEdit() {
-            // Reset validasi
-            document.querySelectorAll('#formEdit .is-invalid').forEach(el => el.classList.remove('is-invalid'));
-
-            const nama = document.getElementById('editNama').value.trim();
-            const kendaraan = document.getElementById('editKendaraan').value.trim();
-            const total = document.getElementById('editTotal').value.trim();
-            const kategori = document.getElementById('editKategori').value;
-            const method = document.getElementById('editMethod').value;
-
-            let valid = true;
-
-            if (!nama) {
-                document.getElementById('editNama').classList.add('is-invalid');
-                valid = false;
-            }
-            if (!kendaraan) {
-                document.getElementById('editKendaraan').classList.add('is-invalid');
-                valid = false;
-            }
-            if (!total) {
-                document.getElementById('editTotal').classList.add('is-invalid');
-                valid = false;
-            }
-            if (!kategori) {
-                document.getElementById('editKategori').classList.add('is-invalid');
-                valid = false;
-            }
-            if (!method) {
-                document.getElementById('editMethod').classList.add('is-invalid');
-                valid = false;
-            }
-
-            if (!valid) return;
+            const fields = [
+                { id: 'editNama', validator: validateNama },
+                { id: 'editKendaraan', validator: validateKendaraan },
+                { id: 'editTotal', validator: validateTotal },
+                { id: 'editKategori', validator: v => v ? '' : 'Pilih kategori pembayaran' },
+                { id: 'editMethod', validator: v => v ? '' : 'Pilih metode pembayaran' },
+            ];
+            if (!validateForm('formEdit', fields)) return;
 
             const id = itemToEditId;
             const index = allPaymentData.findIndex(d => d.id === id);
             if (index !== -1) {
-                allPaymentData[index].name = nama;
-                allPaymentData[index].car = kendaraan;
-                allPaymentData[index].total = total;
-                allPaymentData[index].method = method;
+                allPaymentData[index].name = document.getElementById('editNama').value.trim();
+                allPaymentData[index].car = document.getElementById('editKendaraan').value.trim();
+                allPaymentData[index].total = formatTotal(document.getElementById('editTotal').value.trim());
+                allPaymentData[index].method = document.getElementById('editMethod').value;
 
                 editModalInstance.hide();
                 itemToEditId = null;

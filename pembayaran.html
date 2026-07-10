@@ -11,13 +11,13 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Pustaka Bootstrap Icons untuk aset ikonografi -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-    <!-- Tipografi utama: Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Tipografi utama: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         /* --- Pengaturan Dasar & Tipografi --- */
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'Poppins', sans-serif;
             background-color: #f3f6fc;
             color: #333333;
             overflow-x: hidden;
@@ -441,6 +441,19 @@
         .status-belum {
             background-color: #fce8e6;
             color: #ea4335;
+        }
+
+        /* Badge Plat Nomor */
+        .badge-plate {
+            background-color: #f1f3f5;
+            color: #6c757d;
+            font-family: monospace;
+            font-size: 0.75rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            border: 1px solid #e9ecef;
+            display: inline-block;
+            letter-spacing: 0.5px;
         }
 
         /* Tombol Aksi (Detail, Edit, Hapus) */
@@ -1026,9 +1039,9 @@
                                 <tr>
                                     <th>ID Transaksi</th>
                                     <th>Nama Pelanggan</th>
+                                    <th>Nama Mobil</th>
+                                    <th>Plat Nomor</th>
                                     <th>Tanggal</th>
-                                    <th>Total Tagihan</th>
-                                    <th>Metode</th>
                                     <th>Status</th>
                                     <th>Aksi</th>
                                 </tr>
@@ -1100,13 +1113,19 @@
                                 <div class="invalid-feedback">Nama pelanggan tidak boleh kosong</div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold text-muted small">Kendaraan</label>
-                                <input type="text" class="form-control" id="editKendaraan">
-                                <div class="invalid-feedback">Kendaraan tidak boleh kosong</div>
+                                <label class="form-label fw-semibold text-muted small">Nama Mobil</label>
+                                <input type="text" class="form-control" id="editCarModel">
+                                <div class="invalid-feedback">Nama mobil tidak boleh kosong</div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold text-muted small">Total Tagihan</label>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Plat Nomor</label>
+                                <input type="text" class="form-control" id="editPlat">
+                                <div class="invalid-feedback">Plat nomor tidak boleh kosong</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Total Tagihan</label>
                             <input type="text" class="form-control" id="editTotal">
                             <div class="invalid-feedback">Total tagihan tidak boleh kosong</div>
                         </div>
@@ -1158,13 +1177,19 @@
                                 <div class="invalid-feedback">Nama pelanggan tidak boleh kosong</div>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label fw-semibold text-muted small">Kendaraan</label>
-                                <input type="text" class="form-control" id="tambahKendaraan">
-                                <div class="invalid-feedback">Kendaraan tidak boleh kosong</div>
+                                <label class="form-label fw-semibold text-muted small">Nama Mobil</label>
+                                <input type="text" class="form-control" id="tambahCarModel">
+                                <div class="invalid-feedback">Nama mobil tidak boleh kosong</div>
                             </div>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold text-muted small">Total Tagihan</label>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Plat Nomor</label>
+                                <input type="text" class="form-control" id="tambahPlat">
+                                <div class="invalid-feedback">Plat nomor tidak boleh kosong</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-semibold text-muted small">Total Tagihan</label>
                             <input type="text" class="form-control" id="tambahTotal">
                             <div class="invalid-feedback">Total tagihan tidak boleh kosong</div>
                         </div>
@@ -1223,9 +1248,9 @@
         // 1. Basis Data Simulasi (Digabung jadi satu array untuk memudahkan filter dan pagination client-side)
         let allPaymentData = [
             // Halaman 1 simulasi
-            { id: '#TX-90211', initial: 'AS', avatarClass: 'avatar-blue', name: 'Andi Saputra', car: 'Toyota Avanza (AB 1234 BC)', date: '20 Jun 2026, 14:20', total: 'Rp 1.250.000', method: 'Transfer BCA', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi1.html' },
-            { id: '#TX-90212', initial: 'BW', avatarClass: 'avatar-gray', name: 'Budi Wijaya', car: 'Honda Civic (AB 5678 YZ)', date: '24 Jul 2023, 15:05', total: 'Rp 4.500.000', method: 'Transfer Mandiri', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi2.html' },
-            { id: '#TX-90213', initial: 'CH', avatarClass: 'avatar-teal', name: 'Citra Halim', car: 'Mitsubishi Pajero (AB 3499 SS)', date: '29 Jul 2026, 16:45', total: 'Rp 1.225.000', method: 'Transfer BRI', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi3.html' },
+            { id: '#TX-90211', initial: 'AS', avatarClass: 'avatar-blue', name: 'Andi Saputra', carModel: 'Toyota Avanza', platNomor: 'AB 1234 BC', date: '20 Jun 2026', total: 'Rp 1.250.000', method: 'Transfer BCA', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi1.html' },
+            { id: '#TX-90212', initial: 'BW', avatarClass: 'avatar-gray', name: 'Budi Wijaya', carModel: 'Honda Civic', platNomor: 'AB 5678 YZ', date: '24 Jul 2023', total: 'Rp 4.500.000', method: 'Transfer Mandiri', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi2.html' },
+            { id: '#TX-90213', initial: 'CH', avatarClass: 'avatar-teal', name: 'Citra Halim', carModel: 'Mitsubishi Pajero', platNomor: 'AB 3499 SS', date: '29 Jul 2026', total: 'Rp 1.225.000', method: 'Transfer BRI', status: 'lunas', statusLabel: 'Lunas', url: 'detail_transaksi3.html' },
         ];
 
         // Mapping kategori ke metode pembayaran
@@ -1359,7 +1384,8 @@
                 const matchesSearch =
                     item.id.toLowerCase().includes(searchQuery) ||
                     item.name.toLowerCase().includes(searchQuery) ||
-                    item.car.toLowerCase().includes(searchQuery);
+                    item.carModel.toLowerCase().includes(searchQuery) ||
+                    item.platNomor.toLowerCase().includes(searchQuery);
 
                 const matchesStatus =
                     currentFilterStatus === 'all' ||
@@ -1388,7 +1414,7 @@
 
             // Render Baris Data
             if (paginatedData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-muted">Data transaksi tidak ditemukan.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">Data transaksi tidak ditemukan.</td></tr>`;
             } else {
                 let rowsHTML = '';
                 paginatedData.forEach(item => {
@@ -1398,18 +1424,10 @@
                     rowsHTML += `
                     <tr>
                         <td><a href="${item.url}" class="tx-id">${item.id}</a></td>
-                        <td>
-                            <div class="customer-info">
-                                <div class="avatar-initial ${item.avatarClass}">${item.initial}</div>
-                                <div>
-                                    <span class="fw-semibold-custom">${item.name}</span>
-                                    <span class="text-muted-custom">${item.car}</span>
-                                </div>
-                            </div>
-                        </td>
+                        <td>${item.name}</td>
+                        <td>${item.carModel}</td>
+                        <td><span class="badge-plate">${item.platNomor}</span></td>
                         <td>${item.date}</td>
-                        <td class="fw-bold">${item.total}</td>
-                        <td>${item.method}</td>
                         <td><span class="status-badge ${badgeClass}">${item.statusLabel}</span></td>
                         <td>
                             <div class="action-buttons">
@@ -1475,7 +1493,8 @@
                 itemToEditId = item.id;
                 document.getElementById('editId').value = item.id;
                 document.getElementById('editNama').value = item.name;
-                document.getElementById('editKendaraan').value = item.car;
+                document.getElementById('editCarModel').value = item.carModel;
+                document.getElementById('editPlat').value = item.platNomor;
                 document.getElementById('editTotal').value = item.total;
 
                 // Reverse lookup kategori dari metode
@@ -1499,7 +1518,8 @@
         function openAddModal() {
             document.querySelectorAll('#formTambah .is-invalid').forEach(el => el.classList.remove('is-invalid'));
             document.getElementById('tambahNama').value = '';
-            document.getElementById('tambahKendaraan').value = '';
+            document.getElementById('tambahCarModel').value = '';
+            document.getElementById('tambahPlat').value = '';
             document.getElementById('tambahTotal').value = '';
             document.getElementById('tambahKategori').value = '';
             document.getElementById('tambahMethod').innerHTML = '<option value="">Pilih Metode</option>';
@@ -1514,10 +1534,17 @@
             return '';
         }
 
-        // Fungsi Validasi Kendaraan (min 5 karakter)
-        function validateKendaraan(value) {
-            if (!value) return 'Kendaraan tidak boleh kosong';
-            if (value.length < 5) return 'Kendaraan minimal 5 karakter (contoh: Toyota Avanza)';
+        // Fungsi Validasi Nama Mobil (min 3 karakter)
+        function validateCarModel(value) {
+            if (!value) return 'Nama mobil tidak boleh kosong';
+            if (value.length < 3) return 'Nama mobil minimal 3 karakter (contoh: Avanza)';
+            return '';
+        }
+
+        // Fungsi Validasi Plat Nomor (min 3 karakter)
+        function validatePlat(value) {
+            if (!value) return 'Plat nomor tidak boleh kosong';
+            if (value.length < 3) return 'Plat nomor minimal 3 karakter (contoh: B 1234 AB)';
             return '';
         }
 
@@ -1559,7 +1586,8 @@
         function saveAdd() {
             const fields = [
                 { id: 'tambahNama', validator: validateNama },
-                { id: 'tambahKendaraan', validator: validateKendaraan },
+                { id: 'tambahCarModel', validator: validateCarModel },
+                { id: 'tambahPlat', validator: validatePlat },
                 { id: 'tambahTotal', validator: validateTotal },
                 { id: 'tambahKategori', validator: v => v ? '' : 'Pilih kategori pembayaran' },
                 { id: 'tambahMethod', validator: v => v ? '' : 'Pilih metode pembayaran' },
@@ -1567,7 +1595,8 @@
             if (!validateForm('formTambah', fields)) return;
 
             const nama = document.getElementById('tambahNama').value.trim();
-            const kendaraan = document.getElementById('tambahKendaraan').value.trim();
+            const carModel = document.getElementById('tambahCarModel').value.trim();
+            const platNomor = document.getElementById('tambahPlat').value.trim();
             const total = formatTotal(document.getElementById('tambahTotal').value.trim());
             const method = document.getElementById('tambahMethod').value;
 
@@ -1597,7 +1626,8 @@
                 initial: initial,
                 avatarClass: avatarClass,
                 name: nama,
-                car: kendaraan,
+                carModel: carModel,
+                platNomor: platNomor,
                 date: dateStr,
                 total: total,
                 method: method,
@@ -1615,7 +1645,8 @@
         function saveEdit() {
             const fields = [
                 { id: 'editNama', validator: validateNama },
-                { id: 'editKendaraan', validator: validateKendaraan },
+                { id: 'editCarModel', validator: validateCarModel },
+                { id: 'editPlat', validator: validatePlat },
                 { id: 'editTotal', validator: validateTotal },
                 { id: 'editKategori', validator: v => v ? '' : 'Pilih kategori pembayaran' },
                 { id: 'editMethod', validator: v => v ? '' : 'Pilih metode pembayaran' },
@@ -1626,7 +1657,8 @@
             const index = allPaymentData.findIndex(d => d.id === id);
             if (index !== -1) {
                 allPaymentData[index].name = document.getElementById('editNama').value.trim();
-                allPaymentData[index].car = document.getElementById('editKendaraan').value.trim();
+                allPaymentData[index].carModel = document.getElementById('editCarModel').value.trim();
+                allPaymentData[index].platNomor = document.getElementById('editPlat').value.trim();
                 allPaymentData[index].total = formatTotal(document.getElementById('editTotal').value.trim());
                 allPaymentData[index].method = document.getElementById('editMethod').value;
 
@@ -1670,10 +1702,9 @@
             const tableColumns = [
                 "ID Transaksi",
                 "Nama Pelanggan",
-                "Kendaraan",
+                "Nama Mobil",
+                "Plat Nomor",
                 "Tanggal",
-                "Total Tagihan",
-                "Metode",
                 "Status"
             ];
 
@@ -1681,10 +1712,9 @@
             const tableRows = exportData.map(item => [
                 item.id,
                 item.name,
-                item.car,
+                item.carModel,
+                item.platNomor,
                 item.date,
-                item.total,
-                item.method,
                 item.statusLabel
             ]);
 
